@@ -1,0 +1,24 @@
+[workspace]
+resolver = "2"
+members = ["crates/khnumn-core", "crates/khnumn-cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+license = "Apache-2.0"
+repository = ""
+
+[workspace.dependencies]
+khnumn-core = { path = "crates/khnumn-core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+jsonschema = "0.59"
+rusqlite = { version = "0.40", features = ["bundled"] }
+clap = { version = "4", features = ["derive"] }
+
+[profile.release]
+opt-level = 2
+lto = "thin"
+strip = true

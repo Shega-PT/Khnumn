@@ -1,0 +1,1841 @@
+{
+  "schema_version": "1.0.0",
+  "gerado_utc": "2026-10-21T11:24:28.518497Z",
+  "projecto": "khnumn",
+  "versao": "0.1.0",
+  "licenca_do_projecto": "Apache-2.0",
+  "python": [
+    {
+      "nome": "Pygments",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "2.21.0",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "attrs",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "26.1.0",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "certifi",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "2026.10.19",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "defusedxml",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "0.7.1",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "iniconfig",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "2.3.1",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "jsonschema",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "4.26.0",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "jsonschema-specifications",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "2025.9.1",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "numpy",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "2.5.4",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "opencv-python-headless",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "5.0.0.93",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "packaging",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "26.3",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "piexif",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "1.1.3",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "pillow",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "13.0.0",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "pluggy",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "1.7.0",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "pycolmap",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "4.2.1",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "pyproj",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "3.8.0",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "pytest",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "9.1.1",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "referencing",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "0.37.0",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rpds-py",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "2026.9.1",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "setuptools",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "84.2.1",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "typing_extensions",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "4.16.0",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "wheel",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "versao": "0.48.0",
+      "classificacao": "desconhecida"
+    }
+  ],
+  "rust": [
+    {
+      "nome": "ahash",
+      "versao": "0.8.12",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "aho-corasick",
+      "versao": "1.1.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "allocator-api2",
+      "versao": "0.2.21",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "anstream",
+      "versao": "1.0.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "anstyle",
+      "versao": "1.0.14",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "anstyle-parse",
+      "versao": "1.0.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "anstyle-query",
+      "versao": "1.1.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "anstyle-wincon",
+      "versao": "3.0.11",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "atomic-waker",
+      "versao": "1.1.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "autocfg",
+      "versao": "1.5.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "aws-lc-rs",
+      "versao": "1.18.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "aws-lc-sys",
+      "versao": "0.46.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "base64",
+      "versao": "0.23.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "bit-set",
+      "versao": "0.8.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "bit-vec",
+      "versao": "0.8.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "bitflags",
+      "versao": "2.13.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "block-buffer",
+      "versao": "0.10.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "borrow-or-share",
+      "versao": "0.2.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "bumpalo",
+      "versao": "3.20.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "bytecount",
+      "versao": "0.6.9",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "bytes",
+      "versao": "1.12.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "cc",
+      "versao": "1.9.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "cfg-if",
+      "versao": "1.0.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "clap",
+      "versao": "4.6.7",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "clap_builder",
+      "versao": "4.6.7",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "clap_derive",
+      "versao": "4.6.7",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "clap_lex",
+      "versao": "1.1.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "cmake",
+      "versao": "0.1.58",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "colorchoice",
+      "versao": "1.0.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "combine",
+      "versao": "4.6.9",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "core-foundation",
+      "versao": "0.10.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "core-foundation-sys",
+      "versao": "0.8.7",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "cpufeatures",
+      "versao": "0.2.17",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "crypto-common",
+      "versao": "0.1.7",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "data-encoding",
+      "versao": "2.11.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "digest",
+      "versao": "0.10.7",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "displaydoc",
+      "versao": "0.2.7",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "dunce",
+      "versao": "1.0.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "email_address",
+      "versao": "0.2.9",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "equivalent",
+      "versao": "1.0.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "errno",
+      "versao": "0.3.14",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "fallible-iterator",
+      "versao": "0.3.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "fallible-streaming-iterator",
+      "versao": "0.1.9",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "fancy-regex",
+      "versao": "0.19.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "fastrand",
+      "versao": "2.5.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "find-msvc-tools",
+      "versao": "0.1.15",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "fluent-uri",
+      "versao": "0.4.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "fnv",
+      "versao": "1.0.7",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "foldhash",
+      "versao": "0.2.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "form_urlencoded",
+      "versao": "1.2.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "fraction",
+      "versao": "0.17.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "fs_extra",
+      "versao": "1.3.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "futures-channel",
+      "versao": "0.3.34",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "futures-core",
+      "versao": "0.3.34",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "futures-io",
+      "versao": "0.3.34",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "futures-sink",
+      "versao": "0.3.34",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "futures-task",
+      "versao": "0.3.34",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "futures-util",
+      "versao": "0.3.34",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "generic-array",
+      "versao": "0.14.7",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "getrandom",
+      "versao": "0.2.17",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "getrandom",
+      "versao": "0.3.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "getrandom",
+      "versao": "0.4.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "h2",
+      "versao": "0.4.20",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "hashbrown",
+      "versao": "0.16.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "hashbrown",
+      "versao": "0.17.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "hashlink",
+      "versao": "0.12.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "heck",
+      "versao": "0.5.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "http",
+      "versao": "1.5.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "http-body",
+      "versao": "1.1.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "http-body-util",
+      "versao": "0.1.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "httparse",
+      "versao": "1.10.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "hyper",
+      "versao": "1.12.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "hyper-rustls",
+      "versao": "0.27.10",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "hyper-util",
+      "versao": "0.1.21",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "icu_collections",
+      "versao": "2.3.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "icu_locale_core",
+      "versao": "2.3.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "icu_normalizer",
+      "versao": "2.3.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "icu_normalizer_data",
+      "versao": "2.3.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "icu_properties",
+      "versao": "2.3.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "icu_properties_data",
+      "versao": "2.3.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "icu_provider",
+      "versao": "2.3.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "idna",
+      "versao": "1.1.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "idna_adapter",
+      "versao": "1.2.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "indexmap",
+      "versao": "2.14.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "ipnet",
+      "versao": "2.12.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "is_terminal_polyfill",
+      "versao": "1.70.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "itoa",
+      "versao": "1.0.18",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "jni",
+      "versao": "0.22.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "jni-macros",
+      "versao": "0.22.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "jni-sys",
+      "versao": "0.4.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "jni-sys-macros",
+      "versao": "0.4.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "jobserver",
+      "versao": "0.1.35",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "js-sys",
+      "versao": "0.3.106",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "jsonschema",
+      "versao": "0.59.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "jsonschema-regex",
+      "versao": "0.59.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "jsonschema-value",
+      "versao": "0.59.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "khnumn-cli",
+      "versao": "0.1.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "khnumn-core",
+      "versao": "0.1.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "libc",
+      "versao": "0.2.191",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "libsqlite3-sys",
+      "versao": "0.38.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "linux-raw-sys",
+      "versao": "0.12.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "litemap",
+      "versao": "0.8.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "lock_api",
+      "versao": "0.4.14",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "log",
+      "versao": "0.4.34",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "memchr",
+      "versao": "2.8.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "micromap",
+      "versao": "0.3.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "mio",
+      "versao": "1.2.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "num",
+      "versao": "0.4.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "num-bigint",
+      "versao": "0.4.8",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "num-cmp",
+      "versao": "0.1.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "num-complex",
+      "versao": "0.4.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "num-integer",
+      "versao": "0.1.47",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "num-iter",
+      "versao": "0.1.46",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "num-rational",
+      "versao": "0.4.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "num-traits",
+      "versao": "0.2.19",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "once_cell",
+      "versao": "1.21.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "once_cell_polyfill",
+      "versao": "1.70.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "openssl-probe",
+      "versao": "0.2.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "outref",
+      "versao": "0.5.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "parking_lot",
+      "versao": "0.12.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "parking_lot_core",
+      "versao": "0.9.12",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "percent-encoding",
+      "versao": "2.3.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "pin-project-lite",
+      "versao": "0.2.17",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "pkg-config",
+      "versao": "0.3.34",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "potential_utf",
+      "versao": "0.1.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "proc-macro2",
+      "versao": "1.0.107",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "quote",
+      "versao": "1.0.47",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "r-efi",
+      "versao": "5.3.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "r-efi",
+      "versao": "6.0.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "redox_syscall",
+      "versao": "0.5.18",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "ref-cast",
+      "versao": "1.0.27",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "ref-cast-impl",
+      "versao": "1.0.27",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "referencing",
+      "versao": "0.59.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "regex",
+      "versao": "1.13.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "regex-automata",
+      "versao": "0.4.18",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "regex-syntax",
+      "versao": "0.8.11",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "reqwest",
+      "versao": "0.13.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "ring",
+      "versao": "0.17.14",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rsqlite-vfs",
+      "versao": "0.1.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rusqlite",
+      "versao": "0.40.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rustc_version",
+      "versao": "0.4.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rustix",
+      "versao": "1.1.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rustls",
+      "versao": "0.23.46",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rustls-native-certs",
+      "versao": "0.8.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rustls-pki-types",
+      "versao": "1.15.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rustls-platform-verifier",
+      "versao": "0.7.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rustls-platform-verifier-android",
+      "versao": "0.2.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rustls-webpki",
+      "versao": "0.103.16",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "rustversion",
+      "versao": "1.0.23",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "same-file",
+      "versao": "1.0.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "schannel",
+      "versao": "0.1.30",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "scopeguard",
+      "versao": "1.2.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "security-framework",
+      "versao": "3.7.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "security-framework-sys",
+      "versao": "2.17.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "semver",
+      "versao": "1.0.28",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "serde",
+      "versao": "1.0.229",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "serde_core",
+      "versao": "1.0.229",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "serde_derive",
+      "versao": "1.0.229",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "serde_json",
+      "versao": "1.0.154",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "sha2",
+      "versao": "0.10.9",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "shlex",
+      "versao": "2.0.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "simd_cesu8",
+      "versao": "1.2.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "simdutf8",
+      "versao": "0.1.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "slab",
+      "versao": "0.4.12",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "smallvec",
+      "versao": "1.16.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "socket2",
+      "versao": "0.6.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "sqlite-wasm-rs",
+      "versao": "0.5.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "stable_deref_trait",
+      "versao": "1.2.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "strsim",
+      "versao": "0.11.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "strum",
+      "versao": "0.28.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "strum_macros",
+      "versao": "0.28.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "subtle",
+      "versao": "2.6.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "syn",
+      "versao": "2.0.119",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "syn",
+      "versao": "3.0.9",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "sync_wrapper",
+      "versao": "1.0.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "synstructure",
+      "versao": "0.14.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tempfile",
+      "versao": "3.27.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "thiserror",
+      "versao": "2.0.21",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "thiserror-impl",
+      "versao": "2.0.21",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tinystr",
+      "versao": "0.8.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tokio",
+      "versao": "1.54.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tokio-rustls",
+      "versao": "0.26.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tokio-util",
+      "versao": "0.7.20",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tower",
+      "versao": "0.5.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tower-http",
+      "versao": "0.6.11",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tower-layer",
+      "versao": "0.3.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tower-service",
+      "versao": "0.3.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tracing",
+      "versao": "0.1.44",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "tracing-core",
+      "versao": "0.1.36",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "try-lock",
+      "versao": "0.2.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "typenum",
+      "versao": "1.20.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "unicode-general-category",
+      "versao": "1.1.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "unicode-ident",
+      "versao": "1.0.27",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "untrusted",
+      "versao": "0.9.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "url",
+      "versao": "2.5.8",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "utf8_iter",
+      "versao": "1.0.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "utf8parse",
+      "versao": "0.2.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "uuid-simd",
+      "versao": "0.8.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "vcpkg",
+      "versao": "0.2.15",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "version_check",
+      "versao": "0.9.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "vsimd",
+      "versao": "0.8.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "walkdir",
+      "versao": "2.5.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "want",
+      "versao": "0.3.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "wasi",
+      "versao": "0.11.1+wasi-snapshot-preview1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "wasip2",
+      "versao": "1.0.4+wasi-0.2.12",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "wasm-bindgen",
+      "versao": "0.2.129",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "wasm-bindgen-futures",
+      "versao": "0.4.79",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "wasm-bindgen-macro",
+      "versao": "0.2.129",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "wasm-bindgen-macro-support",
+      "versao": "0.2.129",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "wasm-bindgen-shared",
+      "versao": "0.2.129",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "web-sys",
+      "versao": "0.3.106",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "webpki-root-certs",
+      "versao": "1.0.10",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "winapi-util",
+      "versao": "0.1.11",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows-link",
+      "versao": "0.2.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows-sys",
+      "versao": "0.52.0",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows-sys",
+      "versao": "0.61.2",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows-targets",
+      "versao": "0.52.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows_aarch64_gnullvm",
+      "versao": "0.52.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows_aarch64_msvc",
+      "versao": "0.52.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows_i686_gnu",
+      "versao": "0.52.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows_i686_gnullvm",
+      "versao": "0.52.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows_i686_msvc",
+      "versao": "0.52.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows_x86_64_gnu",
+      "versao": "0.52.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows_x86_64_gnullvm",
+      "versao": "0.52.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "windows_x86_64_msvc",
+      "versao": "0.52.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "wit-bindgen",
+      "versao": "0.57.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "writeable",
+      "versao": "0.6.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "yoke",
+      "versao": "0.8.3",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "yoke-derive",
+      "versao": "0.8.4",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "zerocopy",
+      "versao": "0.8.63",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "zerocopy-derive",
+      "versao": "0.8.63",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "zerofrom",
+      "versao": "0.1.8",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "zerofrom-derive",
+      "versao": "0.1.8",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "zeroize",
+      "versao": "1.9.1",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "zerotrie",
+      "versao": "0.2.5",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "zerovec",
+      "versao": "0.11.8",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "zerovec-derive",
+      "versao": "0.11.6",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    },
+    {
+      "nome": "zmij",
+      "versao": "1.0.23",
+      "licenca": null,
+      "fonte": "desconhecida",
+      "classificacao": "desconhecida"
+    }
+  ],
+  "binarios_embutidos": [
+    {
+      "ficheiro": "libgfortran-83c28eba.so.5.0.0",
+      "bytes": 8426449,
+      "origem": "wheel pycolmap (build estatica do motor COLMAP)"
+    },
+    {
+      "ficheiro": "libgomp-e985bcbb.so.1.0.0",
+      "bytes": 2114857,
+      "origem": "wheel pycolmap (build estatica do motor COLMAP)"
+    },
+    {
+      "ficheiro": "libquadmath-2284e583.so.0.0.0",
+      "bytes": 2100929,
+      "origem": "wheel pycolmap (build estatica do motor COLMAP)"
+    }
+  ]
+}

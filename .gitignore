@@ -1,0 +1,55 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Ambientes e ferramentas
+.venv/
+venv/
+env/
+.tox/
+.nox/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# --- Rust ---
+/target/
+**/*.rs.bk
+
+# Cargo.lock NAO e ignorado de proposito: o Mimir e uma aplicacao, nao uma
+# biblioteca, e o bloqueio de versoes e o comportamento correcto.
+
+# --- Dados, produtos e artefactos locais ---
+# Projectos, imagens de entrada, nuvens de pontos e produtos gerados
+# nao pertencem ao repositorio.
+data/
+datasets/
+outputs/
+work/
+*.log
+*.tmp
+*.swp
+*~
+
+# --- Fixtures geradas ---
+# As imagens de teste sao sinteticas e reproduziveis: o gerador esta
+# versionado, e as imagens nao precisam de estar.
+testes/fixtures/imagens/
+
+# --- Sistema operativo e editores ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sublime-workspace

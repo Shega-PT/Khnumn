@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://khnumn.org/esquemas/projecto-v1.schema.json",
+  "title": "Configuracao de projecto",
+  "description": "Configuracao versionada de um projecto. Os valores de tolerancia em nulo significam por fixar, e nao zero: um limite de erro nao se inventa. O bloco `control` materializa a escolha do metodo de controlo, e o bloco `dense` o orcamento do ciclo de refino.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "target_crs",
+    "scenario",
+    "allow_manual_override",
+    "capture_instant",
+    "control",
+    "dense",
+    "quality",
+    "resources",
+    "processing",
+    "reproducibility"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "id": { "type": "string", "minLength": 1 },
+    "target_crs": {
+      "type": "string",
+      "minLength": 1,
+      "description": "CRS de destino. Nao e um marcador: tem de ser um CRS real e validado."
+    },
+    "scenario": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "aerial_nadir",
+        "aerial_oblique",
+        "urban_facade",
+        "indoor",
+        "natural_terrain",
+        "vegetation",
+        "satellite_optical",
+        "multispectral",
+        "thermal",
+        "sar",
+        "mixed",
+        "unknown"
+      ]
+    },
+    "allow_manual_override": { "type": "boolean" },
+    "capture_instant": {
+      "type": "string",
+      "enum": ["exposure_start", "exposure_middle", "exposure_end"],
+      "description": "Convencao de instante de captura. Afecta a consistencia entre a pose estimada e o carimbo temporal."
+    },
+    "control": {
+      "type": "object",
+      "required": [
+        "method",
+        "gcp_file",
+        "prior_position_std_m",
+        "covariance_required",
+        "propagation",
+        "ensemble_samples",
+        "ensemble_min_samples"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["gnss_pose_priors", "gcp_observations", "similarity_transform"]
+        },
+        "gcp_file": { "type": ["string", "null"] },
+        "prior_position_std_m": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "covariance_required": { "const": true },
+        "propagation": {
+          "type": "string",
+          "enum": ["ensemble", "analytic_similarity", "none"]
+        },
+        "ensemble_samples": { "type": "integer", "minimum": 1 },
+        "ensemble_min_samples": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "dense": {
+      "type": "object",
+      "required": [
+        "path",
+        "max_iterations",
+        "min_density_gain",
+        "max_outlier_rate",
+        "first_pass_full_resolution",
+        "keep_best_iteration"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "enum": ["auto", "sparse_delaunay", "dense_cpu", "dense_accelerator"]
+        },
+        "max_iterations": { "type": "integer", "minimum": 1 },
+        "min_density_gain": { "type": "number", "minimum": 0 },
+        "max_outlier_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "first_pass_full_resolution": { "const": true },
+        "keep_best_iteration": { "const": true }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": [
+        "independent_checkpoints_required",
+        "min_checkpoints",
+        "max_horizontal_rmse_m",
+        "max_vertical_rmse_m",
+        "max_mean_error_ratio",
+        "blunder_factor",
+        "acceptance_reference",
+        "require_uncertainty_report",
+        "diagnostics"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "independent_checkpoints_required": { "type": "boolean" },
+        "min_checkpoints": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "ASPRS ed. 2: trinta pontos de verificacao para avaliacao plenamente conforme."
+        },
+        "max_horizontal_rmse_m": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "max_vertical_rmse_m": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "max_mean_error_ratio": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "blunder_factor": { "type": "number", "exclusiveMinimum": 0 },
+        "acceptance_reference": { "type": "string", "minLength": 1 },
+        "require_uncertainty_report": { "type": "boolean" },
+        "diagnostics": {
+          "type": "object",
+          "required": ["max_reprojection_error_px"],
+          "additionalProperties": false,
+          "properties": {
+            "max_reprojection_error_px": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Diagnostico interno do ajuste. Nao e portao de aceitacao do produto."
+            }
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "required": [
+        "execution_mode",
+        "max_workers",
+        "memory_budget_mb",
+        "temporary_storage_policy",
+        "gpu"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {
+          "type": "string",
+          "enum": ["cpu_first", "cpu_only", "distributed"]
+        },
+        "max_workers": { "type": "integer", "minimum": 1 },
+        "memory_budget_mb": { "type": "integer", "minimum": 64 },
+        "temporary_storage_policy": {
+          "type": "string",
+          "enum": ["bounded", "unbounded"]
+        },
+        "gpu": {
+          "type": "string",
+          "enum": ["optional", "required", "forbidden"]
+        }
+      }
+    },
+    "processing": {
+      "type": "object",
+      "required": [
+        "preserve_originals",
+        "image_pyramid",
+        "sparse_reconstruction",
+        "dense_reconstruction",
+        "build_mesh",
+        "build_orthoimage"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "preserve_originals": { "const": true },
+        "image_pyramid": { "type": "boolean" },
+        "sparse_reconstruction": { "type": "boolean" },
+        "dense_reconstruction": { "type": "boolean" },
+        "build_mesh": { "type": "boolean" },
+        "build_orthoimage": { "type": "boolean" }
+      }
+    },
+    "reproducibility": {
+      "type": "object",
+      "required": [
+        "record_software_versions",
+        "record_parameters",
+        "hash_inputs_and_outputs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "record_software_versions": { "type": "boolean" },
+        "record_parameters": { "type": "boolean" },
+        "hash_inputs_and_outputs": { "type": "boolean" }
+      }
+    }
+  }
+}

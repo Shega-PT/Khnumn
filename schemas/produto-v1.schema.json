@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://khnumn.org/esquemas/produto-v1.schema.json",
+  "title": "Produto com proveniencia",
+  "description": "Ficheiro derivado, com o sistema de coordenadas, a resolucao, a incerteza e a proveniencia. A incerteza e um dado de primeira classe: um produto sem estimativa tem de declarar essa ausencia, e nao omitir o campo.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "product_id",
+    "type",
+    "source_uri",
+    "sha256",
+    "crs",
+    "units",
+    "resolution",
+    "data_kind",
+    "uncertainty",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "product_id": { "type": "string", "minLength": 1 },
+    "type": {
+      "type": "string",
+      "enum": [
+        "nuvem_esparsa",
+        "nuvem_densa",
+        "malha",
+        "textura",
+        "dsm",
+        "dtm",
+        "ortoimagem",
+        "ortomosaico",
+        "poses",
+        "relatorio",
+        "mapa_incerteza"
+      ]
+    },
+    "source_uri": { "type": "string", "minLength": 1 },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "crs": { "type": "string", "minLength": 1 },
+    "units": {
+      "type": "object",
+      "required": ["horizontal", "vertical"],
+      "additionalProperties": false,
+      "properties": {
+        "horizontal": { "type": "string", "minLength": 1 },
+        "vertical": { "type": "string", "minLength": 1 }
+      }
+    },
+    "resolution": {
+      "type": "object",
+      "required": ["horizontal", "vertical", "unit"],
+      "additionalProperties": false,
+      "properties": {
+        "horizontal": { "type": "number", "exclusiveMinimum": 0 },
+        "vertical": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": { "type": "string", "minLength": 1 }
+      }
+    },
+    "data_kind": {
+      "type": "string",
+      "enum": ["medido", "estimado", "interpolado", "inferido_por_modelo"],
+      "description": "Distincao explicita entre dados medidos, estimados, interpolados e inferidos por modelo."
+    },
+    "uncertainty": {
+      "type": "object",
+      "required": ["estimated", "declaration", "value", "unit", "method"],
+      "additionalProperties": false,
+      "properties": {
+        "estimated": {
+          "type": "boolean",
+          "description": "Falso quando a incerteza nao foi estimada. A ausencia de estimativa e declarada, nunca omitida."
+        },
+        "declaration": {
+          "type": ["string", "null"],
+          "description": "Explicacao da ausencia de estimativa, quando nao a ha."
+        },
+        "value": { "type": ["number", "null"], "minimum": 0 },
+        "unit": { "type": ["string", "null"] },
+        "method": { "type": ["string", "null"] }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["operations", "versions", "source_uri"],
+      "additionalProperties": false,
+      "properties": {
+        "source_uri": { "type": ["string", "null"] },
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["task_id", "algorithm", "version", "inputs"],
+            "additionalProperties": false,
+            "properties": {
+              "task_id": { "type": "string" },
+              "algorithm": { "type": "string" },
+              "version": { "type": "string" },
+              "inputs": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "versions": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,269 @@
+{
+  "bloqueadas": 0,
+  "estado": "PASS",
+  "execucoes": [
+    {
+      "algoritmo": "sfm.extrair",
+      "duracao_ms": 15202,
+      "estado": "SUCCEEDED",
+      "metricas": {
+        "avisos": [],
+        "sfm": {
+          "duracao_s": 14.394512965001923,
+          "estado": "SUCCEEDED",
+          "fase": "extracao",
+          "metricas": {
+            "base_dados": "/tmp/opencode/projsfm/tarefas/sfm/database.db",
+            "imagens": 9
+          },
+          "versao_motor": "4.2.1"
+        }
+      },
+      "motivo": null,
+      "pico_memoria_mb": 508,
+      "reutilizada": false,
+      "task_id": "t-f61b5aff8d7e0156"
+    },
+    {
+      "algoritmo": "sfm.corresponder",
+      "duracao_ms": 86957,
+      "estado": "SUCCEEDED",
+      "metricas": {
+        "avisos": [],
+        "sfm": {
+          "duracao_s": 86.07055405700521,
+          "estado": "SUCCEEDED",
+          "fase": "correspondencia",
+          "metricas": {
+            "base_dados": "/tmp/opencode/projsfm/tarefas/sfm/database.db"
+          },
+          "versao_motor": "4.2.1"
+        }
+      },
+      "motivo": null,
+      "pico_memoria_mb": 407,
+      "reutilizada": false,
+      "task_id": "t-e5675e73128d2421"
+    },
+    {
+      "algoritmo": "sfm.mapear",
+      "duracao_ms": 3222,
+      "estado": "SUCCEEDED",
+      "metricas": {
+        "avisos": [],
+        "sfm": {
+          "cameras_no_modelo": 4,
+          "cameras_registadas": 4,
+          "comprimento_medio_de_rastro": 2.807017543859649,
+          "diagnostico": {
+            "cameras_no_modelo": 4,
+            "cameras_registadas": 4,
+            "componentes": [
+              [
+                "DSC_0263.JPG",
+                "DSC_0262.JPG",
+                "DSC_0261.JPG",
+                "DSC_0259.JPG"
+              ]
+            ],
+            "componentes_conectadas": 1,
+            "comprimento_medio_de_rastro": 2.807017543859649,
+            "erro_reprojecao_e_diagnostico": "O erro de reprojecao mede a consistencia interna do ajuste. Nao diz nada sobre escala, georreferenciacao ou observabilidade.",
+            "erro_reprojecao_medio_px": 0.8681381666583874,
+            "gauge": {
+              "camera_constante": 1,
+              "fixado": true,
+              "id_inicial": [
+                1,
+                2
+              ],
+              "metodo": "par inicial declarado e primeira camara mantida constante",
+              "par_inicial": [
+                "DSC_0259.JPG",
+                "DSC_0261.JPG"
+              ]
+            },
+            "indicadores_de_degenerescencia": [],
+            "observacoes": 320,
+            "observacoes_por_imagem_media": 80.0,
+            "observacoes_rejeitadas": 2539,
+            "pontos_3d": 114
+          },
+          "duracao_s": 2.3672847310008365,
+          "erro_reprojecao_medio_px": 0.8681381666583874,
+          "estado": "SUCCEEDED",
+          "fase": "mapeamento",
+          "metricas": {
+            "componentes_conectadas": [
+              [
+                "DSC_0263.JPG",
+                "DSC_0262.JPG",
+                "DSC_0261.JPG",
+                "DSC_0259.JPG"
+              ]
+            ],
+            "diagnostico": {
+              "cameras_no_modelo": 4,
+              "cameras_registadas": 4,
+              "componentes": [
+                [
+                  "DSC_0263.JPG",
+                  "DSC_0262.JPG",
+                  "DSC_0261.JPG",
+                  "DSC_0259.JPG"
+                ]
+              ],
+              "componentes_conectadas": 1,
+              "comprimento_medio_de_rastro": 2.807017543859649,
+              "erro_reprojecao_e_diagnostico": "O erro de reprojecao mede a consistencia interna do ajuste. Nao diz nada sobre escala, georreferenciacao ou observabilidade.",
+              "erro_reprojecao_medio_px": 0.8681381666583874,
+              "gauge": {
+                "camera_constante": 1,
+                "fixado": true,
+                "id_inicial": [
+                  1,
+                  2
+                ],
+                "metodo": "par inicial declarado e primeira camara mantida constante",
+                "par_inicial": [
+                  "DSC_0259.JPG",
+                  "DSC_0261.JPG"
+                ]
+              },
+              "indicadores_de_degenerescencia": [],
+              "observacoes": 320,
+              "observacoes_por_imagem_media": 80.0,
+              "observacoes_rejeitadas": 2539,
+              "pontos_3d": 114
+            },
+            "instantaneo_utc": "2026-10-21T11:18:04.126625Z",
+            "modelo": "/tmp/opencode/projsfm/tarefas/sfm/sparse/4",
+            "resumo_modelo": "Reconstruction:\n\tnum_rigs = 4\n\tnum_cameras = 4\n\tnum_frames = 4\n\tnum_reg_frames = 4\n\tnum_images = 4\n\tnum_points3D = 114\n\tnum_observations = 320\n\tmean_track_length = 2.80702\n\tmean_observations_per_image = 80\n\tmean_reprojection_error = 0.868138"
+          },
+          "observacoes": 320,
+          "observacoes_por_imagem_media": 80.0,
+          "pontos_3d": 114,
+          "versao_motor": "4.2.1"
+        }
+      },
+      "motivo": null,
+      "pico_memoria_mb": 133,
+      "reutilizada": false,
+      "task_id": "t-c1a177fad33f82f3"
+    }
+  ],
+  "executadas": 3,
+  "exportado": [
+    {
+      "bytes": 468,
+      "papel": "poses",
+      "uri": "/tmp/opencode/projsfm/produtos/poses.csv"
+    },
+    {
+      "bytes": 4401,
+      "papel": "nuvem_esparsa",
+      "uri": "/tmp/opencode/projsfm/produtos/nuvem_esparsa.ply"
+    },
+    {
+      "bytes": 1336,
+      "papel": "modelo",
+      "uri": "/tmp/opencode/projsfm/produtos/modelo.json"
+    }
+  ],
+  "falhadas": 0,
+  "reutilizadas": 0,
+  "sfm": {
+    "cameras_no_modelo": 4,
+    "cameras_registadas": 4,
+    "comprimento_medio_de_rastro": 2.807017543859649,
+    "diagnostico": {
+      "cameras_no_modelo": 4,
+      "cameras_registadas": 4,
+      "componentes": [
+        [
+          "DSC_0263.JPG",
+          "DSC_0262.JPG",
+          "DSC_0261.JPG",
+          "DSC_0259.JPG"
+        ]
+      ],
+      "componentes_conectadas": 1,
+      "comprimento_medio_de_rastro": 2.807017543859649,
+      "erro_reprojecao_e_diagnostico": "O erro de reprojecao mede a consistencia interna do ajuste. Nao diz nada sobre escala, georreferenciacao ou observabilidade.",
+      "erro_reprojecao_medio_px": 0.8681381666583874,
+      "gauge": {
+        "camera_constante": 1,
+        "fixado": true,
+        "id_inicial": [
+          1,
+          2
+        ],
+        "metodo": "par inicial declarado e primeira camara mantida constante",
+        "par_inicial": [
+          "DSC_0259.JPG",
+          "DSC_0261.JPG"
+        ]
+      },
+      "indicadores_de_degenerescencia": [],
+      "observacoes": 320,
+      "observacoes_por_imagem_media": 80.0,
+      "observacoes_rejeitadas": 2539,
+      "pontos_3d": 114
+    },
+    "duracao_s": 2.3672847310008365,
+    "erro_reprojecao_medio_px": 0.8681381666583874,
+    "estado": "SUCCEEDED",
+    "fase": "mapeamento",
+    "metricas": {
+      "componentes_conectadas": [
+        [
+          "DSC_0263.JPG",
+          "DSC_0262.JPG",
+          "DSC_0261.JPG",
+          "DSC_0259.JPG"
+        ]
+      ],
+      "diagnostico": {
+        "cameras_no_modelo": 4,
+        "cameras_registadas": 4,
+        "componentes": [
+          [
+            "DSC_0263.JPG",
+            "DSC_0262.JPG",
+            "DSC_0261.JPG",
+            "DSC_0259.JPG"
+          ]
+        ],
+        "componentes_conectadas": 1,
+        "comprimento_medio_de_rastro": 2.807017543859649,
+        "erro_reprojecao_e_diagnostico": "O erro de reprojecao mede a consistencia interna do ajuste. Nao diz nada sobre escala, georreferenciacao ou observabilidade.",
+        "erro_reprojecao_medio_px": 0.8681381666583874,
+        "gauge": {
+          "camera_constante": 1,
+          "fixado": true,
+          "id_inicial": [
+            1,
+            2
+          ],
+          "metodo": "par inicial declarado e primeira camara mantida constante",
+          "par_inicial": [
+            "DSC_0259.JPG",
+            "DSC_0261.JPG"
+          ]
+        },
+        "indicadores_de_degenerescencia": [],
+        "observacoes": 320,
+        "observacoes_por_imagem_media": 80.0,
+        "observacoes_rejeitadas": 2539,
+        "pontos_3d": 114
+      },
+      "instantaneo_utc": "2026-10-21T11:18:04.126625Z",
+      "modelo": "/tmp/opencode/projsfm/tarefas/sfm/sparse/4",
+      "resumo_modelo": "Reconstruction:\n\tnum_rigs = 4\n\tnum_cameras = 4\n\tnum_frames = 4\n\tnum_reg_frames = 4\n\tnum_images = 4\n\tnum_points3D = 114\n\tnum_observations = 320\n\tmean_track_length = 2.80702\n\tmean_observations_per_image = 80\n\tmean_reprojection_error = 0.868138"
+    },
+    "observacoes": 320,
+    "observacoes_por_imagem_media": 80.0,
+    "pontos_3d": 114,
+    "versao_motor": "4.2.1"
+  }
+}

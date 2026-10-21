@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://khnumn.org/esquemas/controlo-v1.schema.json",
+  "title": "Ponto de controlo ou de verificacao",
+  "description": "Ponto com coordenadas conhecidas e incerteza declarada. A covariancia 3x3 e obrigatoria: a incerteza de um levantamento real e anisotropica e correlacionada, e um escalar nao a descreve. Um ponto sem covariancia e um erro de configuracao, e nao uma omissao tolerada.",
+  "type": "object",
+  "required": [
+    "id",
+    "role",
+    "crs",
+    "coordinates",
+    "units",
+    "covariance",
+    "method",
+    "instrument",
+    "measured_utc",
+    "operator"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "role": {
+      "type": "string",
+      "enum": ["control", "checkpoint"],
+      "description": "O papel e um compromisso de carga, e nao uma convencao do operador: a exclusao do ponto de verificacao e imposta pelo carregamento."
+    },
+    "crs": { "type": "string", "minLength": 1 },
+    "coordinates": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "type": "number" }
+    },
+    "units": {
+      "type": "object",
+      "required": ["horizontal", "vertical"],
+      "additionalProperties": false,
+      "properties": {
+        "horizontal": { "type": "string", "minLength": 1 },
+        "vertical": { "type": "string", "minLength": 1 }
+      }
+    },
+    "covariance": {
+      "type": "object",
+      "required": ["units", "matrix"],
+      "additionalProperties": false,
+      "properties": {
+        "units": {
+          "type": "string",
+          "enum": ["m2"],
+          "description": "Unidade dos elementos da matriz. A incerteza nunca e herdada do CRS."
+        },
+        "matrix": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "method": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Metodo de medicao. Nao e decorativo: e o que permite avaliar mais tarde se a incerteza declarada e adequada para aquele aparelho naquele dia."
+    },
+    "instrument": { "type": "string", "minLength": 1 },
+    "measured_utc": { "type": "string", "minLength": 1 },
+    "operator": { "type": "string", "minLength": 1 }
+  }
+}

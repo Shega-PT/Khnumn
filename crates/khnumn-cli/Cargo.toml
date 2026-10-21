@@ -1,0 +1,18 @@
+[package]
+name = "khnumn-cli"
+description = "Interface de linha de comandos do Khnumn."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "khnumn"
+path = "src/main.rs"
+
+[dependencies]
+khnumn-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+clap.workspace = true

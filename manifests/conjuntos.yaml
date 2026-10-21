@@ -1,0 +1,162 @@
+# Khnumn — Manifesto dos conjuntos de dados
+#
+# Este ficheiro declara os conjuntos de dados que o Khnumn usa, com a sua
+# licença verificada, a sua citação exigida, a forma como são podados e
+# partilhados, e o que cada um serve e o que não serve.
+#
+# Os hashes dos ficheiros NÃO estão aqui: estão em `manifests/hashes.yaml`,
+# que é gerado por `scripts/gerar-manifesto.py` a partir do que está
+# efectivamente instalado. A separação é deliberada: a licença e a regra de
+# partilha são decisões, e mudam por decisão; os hashes são uma medição, e
+# mudam por transferência.
+#
+# Os dados em si não estão no repositório. O `.gitignore` exclui
+# `datasets/`, e os dados são volumes de centenas de megabytes a gigabytes.
+
+versao: "1.0.0"
+data: "2026-10-21"
+estado: "Fase 0 — conjunto de dados declarado"
+
+# ---------------------------------------------------------------------------
+# Conjuntos
+# ---------------------------------------------------------------------------
+conjuntos:
+  - nome: eth3d-terrace
+    descricao: >-
+      Cena exterior de referência multi-vista do benchmark ETH3D, com
+      calibração de câmara e nuvem de pontos de varrimento laser. Serve de
+      primeiro alvo verificável para o pipeline de SfM e para a qualidade da
+      reconstrução densa.
+    papel: "pipeline SfM; referência para a via densa, em fase posterior"
+    url: "https://www.eth3d.net/data/terrace_dslr_jpg.7z"
+    ficheiro: "terrace_dslr_jpg.7z"
+    licenca: "CC-BY-NC-SA-4.0"
+    licenca_texto: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    licenca_verificada_em: "2026-10-21"
+    redistribuicao: "nao"
+    redistribuicao_nota: >-
+      A licença é não-comercial. Os dados podem ser usados em investigação e
+      desenvolvimento, e os produtos derivados não podem ser redistribuídos
+      comercialmente. Uma versão comercial do Khnumn tem de usar um conjunto
+      com licença permissiva, ou substituir a cena por uma aquisição própria.
+    citacao_requerida: true
+    citacao: >-
+      T. Schöps, T. Sattler e M. Pollefeys, "ETH3D: A Multi-View Dataset for
+      High-Resolution 3D Reconstruction of Urban Environments", European
+      Conference on Computer Vision (ECCV), 2016.
+    particao:
+      regra: >-
+        Ordenação lexicográfica dos nomes de ficheiro e distribuição por
+        blocos de quatro: a primeira imagem de cada bloco vai para
+        `verificacao`, as restantes vão para `ajuste`. A regra é determinística
+        e não depende de nenhum operador, e a partição de verificação nunca
+        entra no ajuste.
+      ajuste: "as três últimas imagens de cada bloco de quatro"
+      verificacao: "a primeira imagem de cada bloco de quatro"
+      nota: >-
+        A primeira versão desta regra removia uma imagem de cada quatro, em
+        vez de uma por bloco. A medição está em
+        `processos/linha-base.md` §3.2: essa remoção partia a conectividade
+        do grafo de vistas, e a reconstrução cobria 4 das 9 imagens.
+      calibracao: "a calibração de câmara fornecida pelo conjunto"
+      teste: "vazio nesta fase"
+    pre_processamento:
+      - "imagens mantidas na resolução original do conjunto; a limitação de resolução de entrada é um parâmetro do motor e é declarada na execução"
+      - "nenhuma subsampling geométrico aplicado ao conjunto"
+    extraccao:
+      ferramenta: "py7zr, declarado em requirements-dev.lock"
+      nota: >-
+        O arquivo é um 7z, e a sua extracção usa uma ferramenta de
+        desenvolvimento que não faz parte do produto. O conteúdo extraído
+        tem os hashes em manifests/hashes.yaml.
+    valida:
+      - "reconstrução esparsa reprodutível e internamente consistente"
+      - "erro de reprojecção e diagnóstico de degenerescência do modelo"
+      - "nuvem de pontos de referência por varrimento laser, para a qualidade da superfície"
+    nao_valida:
+      - "exactidão posicional absoluta: o conjunto não tem datum de levantamento"
+      - "georreferenciação por pontos de controlo: não há GCPs de topografia"
+      - "cobertura de solo e produção de DTM: é uma cena de arquitectura"
+    nota_estado: >-
+      Com este conjunto, o estado de aceitação de um produto é NOT_VALIDATED.
+      Não há referência geodésica independente, e um PASS seria uma afirmação
+      sem medição.
+
+  - nome: campo-de-ensaio-proprio
+    descricao: >-
+      Levantamento de drone RGB sobre campo de ensaio, com marcas de controlo
+      e pontos de verificação medidos por topografia. É o único conjunto que
+      valida a georreferenciação e a exactidão absoluta da cadeia completa.
+    papel: "cadeia completa: controlo, georreferenciação e validação"
+    url: null
+    ficheiro: null
+    licenca: "uso interno"
+    licenca_texto: null
+    licenca_verificada_em: null
+    redistribuicao: "nao"
+    redistribuicao_nota: >-
+      Aquisição própria, de uso interno. A redistribuição dos dados e dos
+      produtos derivados depende de quem detém o levantamento, e é uma
+      decisão a tomar na fase de distribuição.
+    citacao_requerida: false
+    citacao: null
+    particao:
+      regra: >-
+        Partições por ficheiro, declaradas na lista de aquisição: as marcas de
+        controlo e os pontos de verificação são ficheiros separados, e o
+        ficheiro de verificação é lido apenas pelo validador, depois de o
+        modelo estar congelado.
+      ajuste: "imagens do voo e marcas de controlo"
+      verificacao: "ficheiro de pontos de verificação, nunca lido durante o ajuste"
+      calibracao: "calibração de câmara do próprio voo"
+      teste: "a fixar"
+    pre_processamento:
+      - "a fixar, com a aquisição"
+    valida:
+      - "georreferenciação por pontos de controlo com covariância declarada"
+      - "exactidão horizontal e vertical contra pontos de verificação independentes"
+      - "propagação da incerteza do controlo por ensemble"
+      - "decomposição da incerteza total entre controlo e cena"
+    nao_valida:
+      - "exactidão da via densa em acelerador, que não é executável no ambiente de referência"
+    estado: "por adquirir"
+    nota_estado: >-
+      A aquisição ainda não está realizada. A Fases 1 e 2 são verificadas com
+      o conjunto ETH3D, e este entra no momento em que a cadeia de controlo
+      da Fase 3 precisar dele.
+
+# ---------------------------------------------------------------------------
+# Conjuntos candidatos, ainda não declarados
+# ---------------------------------------------------------------------------
+candidatos:
+  - nome: lamar
+    papel: "robustez de SfM em grande escala e em sequências"
+    url: "https://lamar-doc.github.io/"
+    licenca: "a verificar"
+    nota: "Capturas de AR, não de drone; serve de referência de comparação, não de alvo."
+  - nome: tanks-and-temples
+    papel: "volume, velocidade e completude em grande escala"
+    url: "https://www.tanksandtemples.org/"
+    licenca: "a verificar"
+    nota: "Sem verdade-fundamento densa."
+  - nome: dtu
+    papel: "exactidão densa em cenário controlado"
+    url: "https://roboimagedata2.compute.dtu.dk/"
+    licenca: "a verificar"
+    nota: "Cenário artificial, escala reduzida."
+  - nome: isprs-vaihingen-potsdam
+    papel: "classificação de solo e produção de DTM"
+    url: "https://www.isprs.org/39-2-potsdam-vaihingen-3d-semantic-labeling-dataset.html"
+    licenca: "a verificar"
+    nota: "Cobertura aérea, não SfM."
+
+# ---------------------------------------------------------------------------
+# Regras transversais
+# ---------------------------------------------------------------------------
+regras:
+  - "A licença de cada conjunto é verificada e datada antes de o conjunto ser usado."
+  - "A partição de verificação nunca é lida durante o ajuste, e a exclusão é imposta pelo carregamento."
+  - "Os hashes dos ficheiros são registados, e as execuções de benchmark correm sobre exactamente os mesmos ficheiros, pelos mesmos hashes."
+  - "Qualquer poda ou pré-processamento é declarado, e é igualado entre comparações."
+  - "Um conjunto cuja licença não permite redistribuição é marcado como tal, e os produtos derivados mantêm essa marca na proveniência."
+  - "A licença de uso de dados não é uma questão resolvida pela licença do código: a Apache-2.0 do projecto não se aplica aos dados."

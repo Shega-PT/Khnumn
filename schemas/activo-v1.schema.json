@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://khnumn.org/esquemas/activo-v1.schema.json",
+  "title": "Activo ingerido",
+  "description": "Registo de um ficheiro original ingerido, com os metadados normalizados, a avaliacao de qualidade e a proveniencia. A ausencia de um campo e um valor nulo explicito, nunca uma omissao: a omissao silenciosa de um campo e a forma mais facil de transformar uma lacuna de dados num resultado plausivel.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "asset_id",
+    "source_uri",
+    "sha256",
+    "media_type",
+    "size_bytes",
+    "mtime_utc",
+    "campos_ausentes",
+    "avisos",
+    "capture",
+    "exposure",
+    "width",
+    "height",
+    "processing",
+    "quality",
+    "control_point",
+    "vendor_metadata"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "asset_id": {
+      "type": "string",
+      "pattern": "^a-[0-9a-f]{16}$",
+      "description": "Identificador estavel, derivado do hash do conteudo."
+    },
+    "source_uri": { "type": "string", "minLength": 1 },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Hash do ficheiro original, preservado."
+    },
+    "media_type": { "type": "string", "minLength": 1 },
+    "size_bytes": { "type": "integer", "minimum": 0 },
+    "mtime_utc": { "type": "string", "minLength": 1 },
+    "campos_ausentes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Campos que o ficheiro nao traz. Um campo ausente e sempre contado aqui."
+    },
+    "avisos": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Advertencias registadas na leitura do activo."
+    },
+    "capture": {
+      "type": "object",
+      "required": [
+        "capture_time_utc",
+        "clock_source",
+        "clock_confidence",
+        "sensor_id",
+        "position",
+        "orientation"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "capture_time_utc": {
+          "type": ["string", "null"],
+          "description": "Instante de captura em UTC. Nulo quando o ficheiro nao o traz."
+        },
+        "clock_source": {
+          "type": "string",
+          "enum": ["gnss_timestamp", "exif_datetime_original", "exif_datetime_digitized", "file_mtime", "ausente"],
+          "description": "Origem do carimbo temporal. O carimbo do ficheiro nao e tempo de captura."
+        },
+        "clock_confidence": {
+          "type": "string",
+          "enum": ["alta", "media", "baixa", "nenhuma"]
+        },
+        "sensor_id": { "type": ["string", "null"] },
+        "position": {
+          "type": ["object", "null"],
+          "required": [
+            "crs",
+            "coordinates",
+            "units",
+            "uncertainty_horizontal",
+            "uncertainty_vertical",
+            "source",
+            "vertical_datum"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "crs": { "type": "string", "minLength": 1 },
+            "coordinates": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": { "type": "number" }
+            },
+            "units": { "$ref": "#/$defs/unidades" },
+            "uncertainty_horizontal": { "$ref": "#/$defs/incerteza" },
+            "uncertainty_vertical": { "$ref": "#/$defs/incerteza" },
+            "source": {
+              "type": "string",
+              "description": "Origem do valor. Um valor GNSS e um valor declarado pelo receptor, nao uma medicao verificada."
+            },
+            "vertical_datum": { "type": ["string", "null"] }
+          }
+        },
+        "orientation": {
+          "type": ["object", "null"],
+          "required": ["source", "status"],
+          "additionalProperties": false,
+          "properties": {
+            "source": { "type": "string" },
+            "status": {
+              "type": "string",
+              "enum": ["not_verified", "declared", "verified"]
+            }
+          }
+        }
+      }
+    },
+    "exposure": {
+      "type": "object",
+      "required": [
+        "shutter_speed_s",
+        "aperture",
+        "iso",
+        "focal_length_mm",
+        "exposure_time_s"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "shutter_speed_s": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "aperture": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "iso": { "type": ["integer", "null"], "exclusiveMinimum": 0 },
+        "focal_length_mm": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "exposure_time_s": { "type": ["number", "null"], "exclusiveMinimum": 0 }
+      }
+    },
+    "width": { "type": ["integer", "null"], "minimum": 1 },
+    "height": { "type": ["integer", "null"], "minimum": 1 },
+    "processing": {
+      "type": "object",
+      "required": ["original_preserved", "normalization_profile"],
+      "additionalProperties": false,
+      "properties": {
+        "original_preserved": { "const": true },
+        "normalization_profile": { "type": "string", "minLength": 1 }
+      }
+    },
+    "quality": {
+      "type": ["object", "null"],
+      "required": ["metrics", "criterios", "resumo"],
+      "additionalProperties": false,
+      "properties": {
+        "metrics": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        },
+        "criterios": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "resumo": { "type": "string" }
+      }
+    },
+    "control_point": {
+      "anyOf": [
+        { "$ref": "controlo-v1.schema.json" },
+        { "type": "null" }
+      ],
+      "description": "Ponto de controlo associado, quando o activo faz parte de um levantamento com controlo."
+    },
+    "vendor_metadata": {
+      "type": ["object", "null"],
+      "description": "Metadados do fornecedor, lidos e nao verificados."
+    }
+  },
+  "$defs": {
+    "unidades": {
+      "type": "object",
+      "required": ["horizontal", "vertical"],
+      "additionalProperties": false,
+      "properties": {
+        "horizontal": { "type": "string", "minLength": 1 },
+        "vertical": { "type": "string", "minLength": 1 }
+      }
+    },
+    "incerteza": {
+      "type": ["object", "null"],
+      "required": ["value", "unit", "confidence"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "number", "minimum": 0 },
+        "unit": { "type": "string", "minLength": 1 },
+        "confidence": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

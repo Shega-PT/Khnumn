@@ -1,0 +1,77 @@
+# Gerado por scripts/gerar-manifesto.py. Não editar à mão.
+gerado_utc: "2026-10-21T10:09:28.599053Z"
+conjunto_eth3d:
+  raiz: "datasets/eth3d"
+  ajuste:
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0260.JPG"
+      sha256: "2a45239daf844b82a5d8cfbb7b7b932c8e17f5fe5bfed670925de117f63f0e47"
+      bytes: 9564861
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0261.JPG"
+      sha256: "dd92031081c7c6ef5ddf7c96a45fae2eb45f05dacd446ab813e91bb85595d544"
+      bytes: 9605827
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0262.JPG"
+      sha256: "c727c59516e731d5d78f49076002dda693eef6397c2b515d4843a677534667b7"
+      bytes: 9455033
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0264.JPG"
+      sha256: "f2b642d998fc87e7dd3cb305f50606e930fda4c1b821103197a1ec93d5af203e"
+      bytes: 8428047
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0266.JPG"
+      sha256: "de8210843f7f08084405fa6cdca91928647c3903ad1a67bc6890600a994055b3"
+      bytes: 8600053
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0267.JPG"
+      sha256: "40c45d93b9520a3a926c8a75a50ce691720b39662dfba1c17804178aab87b23a"
+      bytes: 8071289
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0269.JPG"
+      sha256: "d2967bd723d04c588e67930b3be39f73f74038f8103614e9ee0d52e4d9cce436"
+      bytes: 9222363
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0270.JPG"
+      sha256: "25f7812b4087d38a01ea6411652d276fd0237b5a3bc933beae81709d7e3f8d28"
+      bytes: 9427485
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0271.JPG"
+      sha256: "a5b4ad448ab75e38b972770d70f03cfe19f913b7d86d0516970e0bc4badee834"
+      bytes: 9597477
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0273.JPG"
+      sha256: "aa7aa3fb2109af115d197d0f5dabf52140333f5b77aaf1a290db5d049f9b561c"
+      bytes: 11541741
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0274.JPG"
+      sha256: "5782ddf23e7bbf277d35c740323b633cb807053a2d77aa7ea9543406cbc3fdc7"
+      bytes: 11973397
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0275.JPG"
+      sha256: "9ca36730c09c5c9c51788e36bb7b23163ec27c79cebc70594e71110897853361"
+      bytes: 11407331
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0277.JPG"
+      sha256: "63693f7c85d5f4e95331748c5c9370001c758b2cb4b44b1fdbbc0722c0df3937"
+      bytes: 11232864
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0278.JPG"
+      sha256: "484e712af6b558d2643c2e88a64df2910fada6e8f70aa16540f465b7f26ebc65"
+      bytes: 10859864
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0279.JPG"
+      sha256: "1040911524e109d4c1505b4a896de940fe5e30d914c1a8de7767e5b4a0b55aac"
+      bytes: 10449152
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0284.JPG"
+      sha256: "2f7b65b6c64ed53a483c579afeca4e73f94df21119ff214cff8dd83670c1ed26"
+      bytes: 11485283
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0285.JPG"
+      sha256: "e41b4ce0768f96c080c7b7d99c1b0ef3174258f6b80d1d8540151525f24367c7"
+      bytes: 11498087
+  verificacao:
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0259.JPG"
+      sha256: "8952ec1b0ea4cf52cfd75839ea63ae08a548f2088f7ee696a01906f9d6cb003d"
+      bytes: 10229993
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0263.JPG"
+      sha256: "27fd67ff11c83ffb30eff08986724b33254cce7106f6690b32b7df75108c99df"
+      bytes: 9189513
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0268.JPG"
+      sha256: "298270a91c333b7c64c983bd5d3f443d6e212d4245814322f13ff9db4acb2c7f"
+      bytes: 8466920
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0272.JPG"
+      sha256: "f5c10d0e73e02c9cf36a3d2cfa1cf760ac1d88b7493a38602878953a2f5c9d4c"
+      bytes: 10123467
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0276.JPG"
+      sha256: "e9870abc4279d2a9aeeaabf71c228f8440f433f656bf6a44f868d0768f892821"
+      bytes: 11382857
+    - ficheiro: "terrace/terrace/images/dslr_images/DSC_0283.JPG"
+      sha256: "b1b6283b76bcf01ea812febb8f7e3ba55b1615cc222b2afc018e313be9945de8"
+      bytes: 11581249
+  outros:
+    []

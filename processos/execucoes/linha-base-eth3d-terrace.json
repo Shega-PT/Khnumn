@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "identificador": "linha-base-eth3d-terrace",
+  "data": "2026-10-21",
+  "questao": "A reconstrucao esparsa pela via directa do motor e reprodutivel dentro das tolerancias?",
+  "hipotese": "A cena de 23 imagens, com boa sobreposicao e textura, reconstroi-se de forma consistente.",
+  "variavel_alterada": "nenhuma: esta e a execucao de referencia",
+  "dados": {
+    "conjunto": "eth3d-terrace",
+    "particao": "ajuste",
+    "imagens": 9,
+    "hashes": "manifests/hashes.yaml"
+  },
+  "ambiente": {
+    "maquina": "Intel Core i3-5005U, 4 threads, 3826 MiB RAM, sem acelerador",
+    "software": {
+      "pycolmap": "4.2.1",
+      "colmap": "embebido no wheel pycolmap"
+    },
+    "semente": "N/A"
+  },
+  "configuracao": {
+    "max_image_size": 1600,
+    "max_num_features": 2048,
+    "threads": 2,
+    "use_gpu": false,
+    "mapeador": "incremental",
+    "limite_memoria_mb": 500,
+    "par_inicial": [
+      "DSC_0259.JPG",
+      "DSC_0261.JPG"
+    ],
+    "camera_constante": 1
+  },
+  "resultados": {
+    "camera_registadas": 4,
+    "cameras_no_modelo": 4,
+    "pontos_3d": 114,
+    "observacoes": 320,
+    "erro_reprojecao_medio_px": 0.8681381666583874,
+    "comprimento_medio_de_rastro": 2.807017543859649,
+    "observacoes_por_imagem_media": 80.0,
+    "componentes_conectadas": [
+      [
+        "DSC_0263.JPG",
+        "DSC_0262.JPG",
+        "DSC_0261.JPG",
+        "DSC_0259.JPG"
+      ]
+    ]
+  },
+  "tempo": {
+    "extracao": 13.95,
+    "correspondencia": 83.46,
+    "mapeamento": 2.04
+  },
+  "estado": "NOT_VALIDATED",
+  "causa": "Sem referencia geodetica independente: este conjunto valida a consistencia interna e a forma da superficie, nao a exactidao posicional absoluta.",
+  "resumo_do_modelo": "Reconstruction:\n\tnum_rigs = 4\n\tnum_cameras = 4\n\tnum_frames = 4\n\tnum_reg_frames = 4\n\tnum_images = 4\n\tnum_points3D = 114\n\tnum_observations = 320\n\tmean_track_length = 2.80702\n\tmean_observations_per_image = 80\n\tmean_reprojection_error = 0.868138"
+}
