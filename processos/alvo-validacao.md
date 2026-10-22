@@ -7,9 +7,9 @@ Corresponde a etapa `F0.E1` de `docs/ROADMAP.md`.
 usam o caminho relativo à raiz do repositório.
 
 **Estado:** fixado. Decisão datada de 2026-10-21, à luz de
-`docs/Khnumn.md` §27.2 item 1 e §21.2.
+`docs/Khnumn.md` §27.2 item 1 e §21.2; revisto em 2026-10-22.
 
-**Versão do registo:** 0.1.0 · **Data:** 2026-10-21 · **Idioma:** Português europeu
+**Versão do registo:** 0.1.0 · **Data:** 2026-10-22 · **Idioma:** Português europeu
 
 ---
 
@@ -84,7 +84,7 @@ responder (`processos/protocolo-benchmark.md` §3.2).
 |---|---|---|---|---|
 | **LaMAR** | Robustez de SfM em grande escala e em sequências | Verdade-fundamento de SfM e marcas | Escala geodésica, datum e exatidão absoluta | Capturas de AR, não de drone; serve de referência de comparacao, não de alvo |
 | **Tanks&Temples** | Volume, velocidade e completude em grande escala | Trajectória e avaliação qualitativa | Sem verdade-fundamento densa | Uso interno, conforme licença |
-| **ETH3D** | Qualidade da reconstrução densa e da texturização | Varrimentos de laser | Escala e datum | Fase 4; não é executável no ambiente de referência actual |
+| **ETH3D** | Qualidade da reconstrução densa e da texturização; qualidade da rasterização de superfície | Varrimentos de laser, e mapas de profundidade renderizados a partir deles | Escala e datum | Fase 4 para a superfície; Fase 9 para a rasterização, em parte executável neste ambiente; no conjunto `terrace`, a via densa não é executável no ambiente de referência actual |
 | **DTU** | Exactidão densa em cenário controlado | Nuvens de luz estruturada | Escala reduzida, cenário artificial | Fase 4 |
 | **ISPRS Vaihingen / Potsdam** | Classificação de solo e produção de DTM | Rótulos de classes | Cobertura aérea, não SfM | Fase 4 |
 | **Campo de ensaio próprio** | Georreferenciação e exatidão absoluta da cadeia completa | Pontos medidos por topografia | — | Alvo primário, §2 |
@@ -100,14 +100,43 @@ Consequência directa: as execuções da Fase 2 sobre conjuntos públicos
 terminam em `NOT_VALIDATED`, e não em `PASS`. `NOT_VALIDATED` é um estado
 legítimo e preferível a um `PASS` injustificado (`docs/Khnumn.md` §15.4).
 
+### 3.2 A verdade-fundamento da rasterização, no ETH3D
+
+A rasterização de `docs/Khnumn.md` §13.6 introduz uma pergunta que os
+conjuntos de SfM não costumam responder: a projecção está correcta? Um raster
+pode ser geometricamente errado e parecer razoável, e a plausibilidade visual
+não é uma métrica.
+
+O conjunto ETH3D responde a essa pergunta com três ficheiros de
+verdade-fundamento da cena `terrace`, que não estão instalados e que passam a
+ser declarados em `manifests/conjuntos.yaml`:
+
+| Ficheiro | O que é | O que permite concluir |
+|---|---|---|
+| `terrace_scan_clean.7z` | Nuvem de varrimento laser, com os outliers removidos | Distância ponto-superfície da superfície reconstruída, e completude |
+| `terrace_dslr_scan_eval.7z` | O mesmo varrimento, restrito aos pontos observados por duas ou mais imagens | A comparação justa para avaliação MVS, em que os pontos nunca observados não penalizam a completude |
+| `terrace_dslr_depth.7z` | Mapas de profundidade renderizados a partir do varrimento | O campo de profundidade do rasterizador, comparado **pixel a pixel** com a verdade-fundamento |
+
+O terceiro é o mais forte dos três: ele verifica a projecção e o rasterizador
+ao mesmo tempo, e não a qualidade da reconstrução. Uma divergência entre o
+campo de profundidade rasterizado e o campo de verdade-fundamento é
+localizável ao píxel, e distingue um erro de projecção de um erro de
+geometria.
+
+O que esta verdade-fundamento **não** valida, e o que se mantém: o `terrace`
+não tem datum de levantamento, e portanto o estado de aceitação dos produtos
+que dele derivam continua a ser `NOT_VALIDATED`. O que se ganha é a validação
+da **projecção**, que é interna, e não da exatidão posicional, que é externa.
+
 ## 4. Rastreabilidade
 
 | Item | Valor |
 |---|---|
 | Decisão | Alvo primário: levantamento de drone RGB com controlo no terreno |
-| Data | 2026-10-21 |
+| Data | 2026-10-21; revisto em 2026-10-22 |
 | Etapa | `F0.E1` de `docs/ROADMAP.md` |
-| Referência | `docs/Khnumn.md` §27.2 item 1, §21.2, §5.7 |
+| Referência | `docs/Khnumn.md` §27.2 item 1, §21.2, §5.7, §13.6 |
+| Revisão de 2026-10-22 | Acrescentada a verdade-fundamento da rasterização no ETH3D, e o que ela valida e o que não valida (§3.2) |
 | Pendência | Parâmetros de aquisição e fichas de controlo e verificação (§2.2) |
 | Efeito no roadmap | Nenhum: a ordem de execução das etapas não muda |
 

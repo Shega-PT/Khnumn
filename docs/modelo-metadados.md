@@ -7,9 +7,9 @@ e à decisão 4 de `docs/Khnumn.md` §27.2.
 **Convenção de referências:** as menções a outros documentos deste repositório
 usam o caminho relativo à raiz do repositório.
 
-**Estado:** fixado. Decisão datada de 2026-10-21.
+**Estado:** fixado. Decisão datada de 2026-10-21; revisto em 2026-10-22.
 
-**Versão do registo:** 0.1.0 · **Data:** 2026-10-21 · **Idioma:** Português europeu
+**Versão do registo:** 0.1.0 · **Data:** 2026-10-22 · **Idioma:** Português europeu
 
 ---
 
@@ -47,7 +47,26 @@ isolada do binário.
 | `activo-v1.schema.json` | Um ficheiro original ingerido: hash, formato, dimensões, captura, exposição, avaliação de qualidade e ponto de controlo associado |
 | `controlo-v1.schema.json` | Um ponto de controlo ou de verificação: coordenadas, covariância 3×3, método, instrumento, data e operador |
 | `projecto-v1.schema.json` | A configuração versionada de um projecto |
-| `produto-v1.schema.json` | Um produto derivado, com CRS, resolução, incerteza e proveniência |
+| `produto-v1.schema.json` | Um produto derivado, com formato, CRS, resolução, incerteza e proveniência. Transporta também, quando é um mapa, o nome do campo escalar e a legenda numérica da rampa |
+
+### 2.2 A numeração dos esquemas
+
+Os esquemas são versionados **por formato de contrato**, e não por versão de
+dados publicados. A designação `v1` de cada ficheiro é a do formato do
+contrato, e a `schema_version` que cada registo carrega é a versão desse
+formato. A numeração `0.1.0` do projecto é a do projecto como um todo, e não
+a de nenhum esquema em particular.
+
+Os esquemas existem desde o início do projecto, e são preenchidos à medida que
+o sistema cresce. A razão é práctica: eles são o ponto de ancoragem dos
+testes, e um contrato que só aparecesse quando o sistema estivesse completo
+não teria contra o que testar. **Nenhum produto foi emitido**, e por isso o
+esquema de produto é revisto no lugar, à medida que os tipos de produto e os
+seus campos entram em uso, sem versionamento novo e sem migração.
+
+A numeração dos esquemas torna-se um compromisso de dados a partir da
+primeira distribuição, e essa decisão fica registada em
+`processos/decisoes-motores.md`.
 
 ## 3. O registo de um activo
 
@@ -182,7 +201,38 @@ produto honesto de um produto que esconde uma lacuna. O esquema do produto
 exige `estimated`, e o seu valor é `false` com uma declaração; um produto sem
 incerteza não pode ser serializado sem essa declaração.
 
-## 6. A proveniência
+## 6. O CRS como dado
+
+O sistema de coordenadas de um produto é um dado de primeira classe, com o
+mesmo tratamento que a incerteza: quando existe, é declarado; quando não
+existe, a ausência é declarada, e nunca preenchida com um valor que situaria
+o produto num referencial que não é o seu.
+
+O caso que força esta regra é o raster de §13.6 de `docs/Khnumn.md`. Um
+campo de resíduos de reprojjeção vive na grelha de píxeis de uma câmara
+reconstruída, e essa grelha **não tem CRS**: não está num referencial
+terrestre, e declará-lo seria uma falsificação que nenhum erro de
+reprojecção denunciaria. O esquema do produto resolve-o com dois campos, e
+com a mesma gramática que já usava para a incerteza:
+
+| Campo | Quando há CRS | Quando não há |
+|---|---|---|
+| `crs` | o identificador do sistema | `null` |
+| `crs_declaration` | porque é aquele | a explicação da ausência |
+
+Um mapa de cobertura ou de incerteza, esses sim, é publicado no CRS de
+destino, e o `crs` está preenchido e a `crs_declaration` diz porque é aquele.
+
+A regra é **imposta pelo esquema**, e não apenas declarada: quando o `crs` é
+nulo, a `crs_declaration` tem de ser um texto não vazio, e o esquema rejeita o
+registo caso contrário. O mesmo se passou a valer para a incerteza, em que uma
+estimação ausente tem de trazer a declaração que a explica. Declarar a regra e
+não a impor deixa sempre uma porta por onde um produto sem explicação passa,
+e um produto sem explicação é um produto que mente por omissão.
+
+---
+
+## 7. A proveniência
 
 Cada produto conserva a ligação até às fontes e às operações que o
 produziram (`docs/Khnumn.md` §7.3). A registo de proveniência é composta por:
@@ -199,7 +249,7 @@ modelo de superfície é `estimado`, mesmo quando os seus pontos são medidos,
 e a distinção é o que permite ao relatório dizer o que a exatidão do produto
 significa.
 
-## 7. Formato de serialização
+## 8. Formato de serialização
 
 JSON, com uma versão de esquema por registo.
 
@@ -209,16 +259,17 @@ arredondamentos, as suas próprias datas e as suas próprias surpresas. A
 configuração de projecto é JSON pelo mesmo motivo, e a ilustração YAML de
 `docs/Khnumn.md` §24.1 é declaradamente ilustrativa.
 
-## 8. Registo
+## 9. Registo
 
 | Item | Valor |
 |---|---|
 | Decisão | JSON Schema 2020-12, embutido no binário; ausência explícita; unidade explícita; declaração como verdade separada de valor verificado |
-| Data | 2026-10-21 |
-| Etapa | `F0.E5` de `docs/ROADMAP.md` |
-| Referência | `docs/Khnumn.md` §27.2 item 4, §7.1, §7.2, §7.3, §5.6, §8.2, §3.2 |
+| Data | 2026-10-21; revisto em 2026-10-22 |
+| Etapa | `F0.E5` de `docs/ROADMAP.md`; revisão em `F9.E1` |
+| Referência | `docs/Khnumn.md` §27.2 item 4, §7.1, §7.2, §7.3, §5.6, §8.2, §3.2, §13.6 |
 | Implementado em | `F1.E1`, com o núcleo em `crates/khnumn-core/src/schema.rs` e o modelo em `crates/khnumn-core/src/modelo.rs` |
-| Efeito no roadmap | Nenhum na ordem; fixa o contrato de `F1.E1` |
+| Revisão de 2026-10-22 | Acrescentados ao esquema de produto o formato em disco, o nome do campo escalar de um mapa, a legenda numérica, e a declaração de ausência de CRS. Decisões em `processos/decisoes-motores.md`, ADR-012 e ADR-013 |
+| Efeito no roadmap | Nenhum na ordem; fixa o contrato de `F1.E1` e de `F9.E1` |
 
 ---
 

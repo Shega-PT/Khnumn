@@ -2,7 +2,7 @@
 
 **Estado do documento:** proposta técnica inicial para investigação e desenvolvimento (I&D)  
 **Versão:** 0.1.0  
-**Data:** 2026-10-20  
+**Data:** 2026-10-22
 **Idioma:** Português europeu  
 **Nome de trabalho:** Khnumn — nome do deus egípcio que moldava as primeiras formas humanas numa roda de oleiro, e cujas águas do Nilo renovavam a terra. A nomenclatura anterior, Mímir, foi abandonada por estar ocupada pelo sistema Grafana Mimir; a verificação de que Khnumn não correspondia a nenhum repositório, pacote, empresa ou domínio foi feita a 2026-10-20 e está registada em ADR-011.
 
@@ -58,11 +58,17 @@ A partir de dados compatíveis, Khnumn deverá conseguir produzir, conforme a ge
 - nuvem de pontos esparsa e densa;
 - malha triangular texturizada;
 - modelo digital de superfície (DSM/MDS);
-- modelo digital do terreno (DTM/MDT), quando seja possível separar terreno e objetos;
+- modelo digital do terreno (DTM/MDT), quando é possível separar terreno e objetos;
 - ortomosaico ou ortoimagem;
 - mapas de cobertura, densidade, qualidade e incerteza;
 - relatórios de calibração, georreferenciação e validação;
-- metadados de proveniência para rastrear cada produto até às fontes e operações que o produziram.
+- metadados de proveniência, que rastreiam cada produto até às fontes.
+
+Os mapas são **campos quantificados**, e não imagens: cada um declara o
+campo que transporta, a sua unidade, a sua legenda e a classe de ausência, e
+cada um é produzido por rasterização da geometria medida, conforme §13.6. Um
+mapa cuja ausência não é distinguível de um valor é um produto falso, e por
+isso a classe "sem dados" é explícita no contrato do produto.
 
 Nem todos os dados permitem todos os produtos. Por exemplo, uma imagem única sem informação adicional não permite, em geral, recuperar uma geometria 3D métrica única. O sistema deve declarar essa limitação em vez de inventar profundidade.
 
@@ -251,12 +257,21 @@ A arquitetura proposta separa o controlo do fluxo de dados dos motores de recons
       [DSM/DTM]   [Malha 3D] [Ortoimagem]
           |           |           |
           +-----------+-----------+
-                      v
+                       |
+                       v
+          [Rasterização de diagnóstico]
+                       |
+                       v
        [Validação independente + incerteza]
-                      |
-                      v
+                       |
+                       v
       [Exportação + relatório + proveniência]
 ```
+
+A rasterização de diagnóstico é um **instrumento que alimenta a validação**:
+consome a superfície e devolve campos quantificados — cobertura, resíduos,
+inconsistência multivista — que a validação consome. Não produz geometria, não
+decide o modelo, e não é uma etapa de reconstrução. Está descrita em §13.6.
 
 ### 6.1 Módulos
 
@@ -267,9 +282,10 @@ A arquitetura proposta separa o controlo do fluxo de dados dos motores de recons
 5. **Scenario Classifier:** estima classes candidatas e respetiva confiança; permite correção manual e guarda a decisão final.
 6. **Planner:** escolhe operações com base nos dados, objetivos, recursos disponíveis e limites de qualidade.
 7. **Motores geométricos:** executam calibração, correspondências, SfM, MVS, alinhamento e fusão.
-8. **Validator:** separa validação interna da validação com checkpoints independentes.
-9. **Exporter:** escreve produtos e relatórios em formatos documentados.
-10. **Scheduler:** distribui tarefas, gere memória, checkpoints, repetição e cancelamento.
+8. **Rasterizador:** projeta a geometria medida sobre uma grelha 2D sob um modelo de câmara explícito, e produz campos quantificados, nunca imagens. Não produz geometria e não decide o modelo.
+9. **Validator:** separa validação interna da validação com checkpoints independentes.
+10. **Exporter:** escreve produtos e relatórios em formatos documentados.
+11. **Scheduler:** distribui tarefas, gere memória, checkpoints, repetição e cancelamento.
 
 ### 6.2 Fluxo de trabalho como DAG
 
@@ -443,6 +459,8 @@ Os intrínsecos típicos incluem focais em píxeis, ponto principal e parâmetro
 A importação de uma calibração obtida por ferramenta externa exige atenção à convenção de coordenadas de píxel e à ordem dos parâmetros de distorção. Ferramentas como OpenCV e Kalibr usam coordenadas inteiras para o centro do píxel e centram o ponto principal em `((largura - 1) / 2, (altura - 1) / 2)`; o COLMAP coloca a origem no canto superior esquerdo, situa o centro do píxel em `(0.5, 0.5)` e centra o ponto principal em `(largura / 2, altura / 2)`. A conversão exige somar `0.5` às componentes `cx` e `cy`. Sem esta correção introduz-se um erro sistemático de meio píxel em todas as observações, que nem a auto-calibração nem um erro de reprojeção baixo denunciam. A ordem dos parâmetros de distorção também tem de coincidir entre o modelo de origem e o modelo de destino; o modelo `OPENCV` do COLMAP usa os mesmos `k1, k2, p1, p2` do OpenCV, enquanto `FULL_OPENCV` acrescenta `k3, k4, k5, k6`.
 
 Em câmaras de consumo, os parâmetros de distorção podem variar com a distância de foco e não apenas com o zoom. Uma calibração única para toda a coleção pode, por isso, introduzir resíduos sistemáticos por grupo de imagens; a partição por configuração de captura deve ser avaliada antes de se aceitar um único modelo partilhado.
+
+A projecção \(\pi(K,R,t,X)\) que aqui se descreve é a do **motor de reconstrução**, e é também a do rasterizador de §13.6, que tem de ser a mesma função e não uma aproximação equivalente. A família de modelos implementada pelo rasterizador tem de cobrir os modelos que o motor usa, e não apenas o pinhole aqui descrito: o primeiro conjunto de validação do projecto usa câmaras de modelo `THIN_PRISM_FISHEYE`, e um raster produzido com um modelo de câmara diferente do modelo das observações é um produto errado que não denuncia o erro, porque a plausibilidade visual de uma imagem não é um indício da sua correcção geométrica.
 
 ### 10.2 Rolling shutter e obturador
 
@@ -618,6 +636,72 @@ A ortorretificação depende da geometria do sensor, do modelo de superfície e 
 
 A produção da ortoimagem não está coberta pelos motores de SfM e MVS. É uma etapa de reprojeção de rasters, dependente de uma cadeia geoespacial própria, e o relatório de proveniência tem de registar o modelo de superfície, o CRS de destino e o método de reamostragem efectivamente usados. Nas costuras de mosaico, a descontinuidade admissível entre parcelas vizinhas é de duas vezes o `RMSE_H`, conforme §15.5, e a verificação dessa descontinuidade é parte da validação do produto e não um detalhe de montagem visual.
 
+A ortoimagem e a rasterização de §13.6 resolvem problemas diferentes, e nenhuma substitui a outra. A ortoimagem é a **reprojecção de rasters de origem** para uma projeção cartográfica, e o seu produto é uma imagem do terreno com a radiometria das observações. A rasterização de §13.6 é a **medição de uma superfície** sobre uma grelha, e o seu produto é um campo quantificado, com profundidade e classe de ausência. A primeira precisa da cadeia geoespacial do GDAL; a segunda precisa de um modelo de câmara, e de uma projecção que seja a do motor. Uma não produz a outra.
+
+### 13.6 Rasterização de superfície e mapas de diagnóstico
+
+#### 13.6.1 Finalidade
+
+A §1.1 promete mapas de cobertura, densidade, qualidade e incerteza, e §22 prevê a deteção de zonas com cobertura insuficiente. Nenhum desses mapas tem produtor, e nenhum dos campos de §15.1 que dependem de uma projecção — a cobertura espacial e as zonas sem observações, a consistência entre vistas, e o desvio introduzido pela simplificação — é hoje apurável. A rasterização é o instrumento que os produz: projeta a geometria medida sobre uma grelha 2D, sob um modelo de câmara explícito, e devolve um campo quantificado.
+
+A operação é antiga e publicada, e o sistema não a inventa: a técnica de rasterização de triângulos com z-buffer e interpolação de profundidade em perspectiva correcta está descrita nas referências de §26, e a implementação é própria, conforme ADR-012.
+
+#### 13.6.2 O que é, e o que não é
+
+É a projeção de uma superfície medida sobre uma grelha, com profundidade, classe de ausência e, quando aplicável, um campo escalar.
+
+**Não é uma visualização.** O raster não é o produto; o campo é. Um produto de rasterização transporta o valor, a unidade, a legenda e a classe de ausência, e a imagem é apenas a face legível de um campo que se pode medir.
+
+**Não é um método de reconstrução.** Não produz geometria: consome-a. Um raster de cobertura descreve uma superfície que já foi reconstruída, e a qualidade do raster nunca é melhor do que a qualidade da superfície de que parte.
+
+**Não substitui a ortoimagem de §13.5**, que é uma etapa de reprojeção de rasters sobre uma cadeia geoespacial própria, conforme a distinção feita nessa secção.
+
+#### 13.6.3 Os três modos
+
+| Modo | Grelha | Fonte da câmara | O que produz |
+|---|---|---|---|
+| **Perspectiva** | Grelha de píxeis de uma imagem | Câmara reconstruída, com os intrínsecos e a pose do motor | Campo de resíduos de reprojecção, e vistas de diagnóstico |
+| **Ortográfica** | Grelha do CRS de destino | Grelha de plano paralelo à superfície, com a transformação do CRS | Mapas de cobertura e de densidade |
+| **Acumulação multivista** | Grelha de uma vista de referência | Todas as vistas que observam a mesma região | Inconsistência entre vistas |
+
+Os três modos partilham a mesma projecção e o mesmo rasterizador, e diferem na grelha e no conjunto de câmaras. Nenhum deles é uma etapa separada do pipeline: são três configurações do mesmo mecanismo.
+
+#### 13.6.4 Fidelidade do modelo de câmara
+
+A projecção usada é a mesma função que apura os resíduos de reprojecção, e implementa a família de modelos de câmara do motor de SfM, e não apenas o pinhole de §10.1. A convenção de coordenadas de píxel de §10.1 aplica-se integralmente, e uma conversão incorrecta produziria um erro sistemático de meio píxel que nem um erro de reprojecção baixo denunciaria.
+
+A consequência é um risco com forma própria: um raster produzido com um modelo de câmara diferente do modelo das observações é um produto errado que não denuncia o erro. A plausibilidade visual de uma imagem não é um indício da sua correcção geométrica, e por isso o rasterizador tem de ser verificado contra a projecção do próprio motor, e não apenas observado.
+
+#### 13.6.5 Determinismo e ausência de acelerador
+
+A rasterização é determinística: a mesma entrada produz sempre o mesmo raster, com o mesmo hash. Não há caminho opcional, e nenhum resultado depende de um acelerador. Esta é uma consequência do princípio de §3.3, e não uma optimização: um produto de diagnóstico que só existe quando há GPU não é um produto, é uma demonstração.
+
+A rasterização é uma tarefa do grafo, com versão, parâmetros, entradas imutáveis e saídas identificadas por hash, como qualquer outra (§6.2).
+
+#### 13.6.6 A classe "sem dados"
+
+Uma área sem observação é uma **classe**, não um valor. O produto declara-a explicitamente, e a legenda distingue-a de qualquer valor numérico. Uma ausência apresentada como valor é um produto falso: um mapa de cobertura em que a zona sem observação aparece com a cor da cobertura nula lê-se como "aí foi medido e não se viu nada", que é uma afirmação diferente de "aí ninguém olhou".
+
+O mesmo se aplica ao resíduo de reprojecção, em que a ausência é a ausência de observação e não um resíduo de valor zero.
+
+#### 13.6.7 O raster é diagnóstico
+
+O que entra num relatório são os campos quantificados, nunca a imagem. A plausibilidade visual não é uma métrica, e a §1.3 do protocolo de benchmark aplica-se à rasterização como se aplica a tudo o resto: quando uma inspeção visual sugere um problema, a execução tem de ser instrumentada para o confirmar ou o refutar. Um raster pode sugerir; as métricas apuradas sobre ele é que confirmam.
+
+Consequência prática: um produto de rasterização nunca é, por si só, um portão de aceitação. É um instrumento para apurar uma das métricas de §15.1, e a aceitação continua a ser decidida pelas tolerâncias de §15.5 e pelos pontos de verificação independentes.
+
+#### 13.6.8 Nível de detalhe
+
+A simplificação para visualização tem de declarar o **desvio geométrico** que introduz, e não apenas afirmar que não altera as medidas. O desvio é medido, em metros, contra a malha de resolução integral, e é uma métrica de §15.1.
+
+A simplificação que reduz a contagem de faces sem aumentar o desvio é uma simplificação que se pode fazer; a que reduz o desvio só o parece, e a medição é que separa as duas. A simplificação não é uma propriedade do raster, é uma propriedade da malha de que o raster parte, e por isso o desvio declarado acompanha o produto de malha e não o de mapa.
+
+#### 13.6.9 Formato e publicação
+
+O núcleo escreve um **TIFF intermédio**, sem compressão, e a camada científica reescreve-o como **Cloud Optimized GeoTIFF**, com CRS, `nodata`, overviews e as tags de proveniência e de legenda. São dois produtos com uma linhagem, e não um: o intermédio tem hash e é produto intermédio, e o publicado é o produto final, conforme ADR-013.
+
+A transformação para o CRS de destino é geodésia, e a geodesia é da camada científica, conforme §18.1. O núcleo fica em espaço de câmara, onde não há CRS, e é por isso que um raster em grelha de câmara tem o `crs` nulo, com a ausência declarada, e não um CRS inventado.
+
 ## 14. Fusão multissensor e validação cruzada
 
 A inovação central proposta para Khnumn é uma camada de fusão que não mistura medições sem contexto. Cada medição deve manter tipo, sistema de coordenadas, época, resolução, modelo do sensor, covariância e proveniência.
@@ -640,6 +724,8 @@ A concordância entre sensores é evidência útil, mas não equivale a verdade 
 
 Proposta: manter uma representação de evidência por célula/elemento espacial, incluindo estimativa geométrica, covariância, número e diversidade de observações, proveniência, época e indicadores de consistência. A decisão de aceitar, rejeitar ou manter múltiplas hipóteses deve usar regras explícitas e ser testada contra conjuntos de referência. Esta camada não deve ser apresentada como inovação comprovada até haver benchmarks comparativos.
 
+A rasterização de §13.6 é o instrumento que produz a grelha desta camada. A mesma grelha que serve a evidência por célula serve o mapa de cobertura, e os dois produtos têm de ser coerentes entre si: uma célula que é declarada como tendo observação num produto não pode aparecer como ausente no outro. A divergência entre as duas vistas da mesma grelha é, ela própria, um indício de defeito, e a verificação dessa coerência é parte da validação.
+
 ## 15. Precisão, incerteza e critérios de aceitação
 
 ### 15.1 Métricas mínimas
@@ -654,6 +740,22 @@ Proposta: manter uma representação de evidência por célula/elemento espacial
 - cobertura espacial e zonas sem observações;
 - taxa de falha e proporção de dados rejeitados;
 - tempo, pico de RAM, CPU, armazenamento temporário e energia, quando mensurável.
+
+A rasterização de §13.6 acrescenta as métricas que dependem de uma projecção, e que antes não tinham instrumento. São quantificadas sobre o campo, e nunca sobre a imagem:
+
+| Métrica | Unidade | Definição |
+|---|---|---|
+| `cobertura_percent` | % | células da grelha com superfície observada, sobre o total de células da grelha |
+| `furos_contagem` | contagem | componentes contíguas de células sem observação |
+| `furos_area_m2` | m² | área total das componentes sem observação |
+| `residuo_reprojecao_medio_px` | px | média do resíduo por câmara, sobre as observações projectadas |
+| `residuo_reprojecao_p95_px` | px | percentil 95 do resíduo, por câmara |
+| `residuo_reprojecao_max_px` | px | resíduo máximo, por câmara |
+| `inconsistencia_multivista_m` | m | desacordo de profundidade entre vistas, por sub-região |
+| `deslocamento_lod_max_m` | m | desvio geométrico máximo introduzido pela simplificação |
+| `deslocamento_lod_medio_m` | m | desvio geométrico médio introduzido pela simplificação |
+
+As três últimas exigem uma ressalva. `residuo_reprojecao_medio_px` é o mesmo número que o motor de SfM reporta, e a coincidência entre os dois é uma verificação, não uma coincidência: a função de projecção é a mesma. `inconsistencia_multivista_m` depende do número de vistas que observam cada célula, e esse número tem de ser declarado com a métrica, porque o mesmo desacordo medido com duas vistas e com dez não significa a mesma coisa. E `deslocamento_lod_*` só tem sentido contra a malha de resolução integral, que é a referência declarada.
 
 Para coordenadas observadas `x_i` e referência `x_i*`, o RMSE escalar é:
 
@@ -786,11 +888,13 @@ A distribuição pode alterar ordem de redução numérica e, portanto, produzir
 
 A atribuição acima deve ser lida com realismo quanto ao ecossistema disponível. O Rust é adequado para esquema, DAG, catálogo, validação e integridade, mas o ecossistema geoespacial em Rust é imaturo: a implementação pura existente de transformações de CRS não suporta WKT nem transformações 3D ou ortométricas. A geodesia tem, por isso, de passar obrigatoriamente pela PROJ através de uma interface nativa, e não por uma reimplementação em Rust. O mesmo se aplica ao núcleo geométrico: as rotinas de SfM, MVS e ajuste de feixes disponíveis são C/C++ ou Python, e reimplementá-las em Rust contraria o princípio de reutilizar, medir e só depois substituir de §3.5.
 
+A rasterização de superfície de §13.6 **não é uma excepção** a esta regra, e a razão é a mesma: o rasterizador opera em espaço de câmara, onde não há CRS. Ele produz profundidades, resíduos e campos escalares em coordenadas de imagem ou de grelha local, e a transformação para o CRS de destino — que é geodésia — pertence à camada científica. É essa separação que permite manter o rasterizador em Rust, no núcleo, sem um único componente geoespacial do lado do núcleo, e sem arrastar para dentro do binário distribuível uma biblioteca de CRS que o princípio de §3.3 recusa.
+
 Não é obrigatório implementar tudo em várias linguagens desde o primeiro dia. O MVP deve minimizar fronteiras de interoperabilidade até os contratos e os benchmarks estarem estáveis.
 
 ### 18.2 Bibliotecas e projetos a avaliar
 
-A tabela abaixo foi verificada em 2026-10-20. A coluna da licença refere-se ao código do próprio componente; as dependências transitivas e as efectivamente compiladas têm licenças próprias e têm de ser auditadas por build, não por tabela.
+A tabela abaixo foi verificada em 2026-10-20, e as linhas acrescentadas depois em 2026-10-22. A coluna da licença refere-se ao código do próprio componente; as dependências transitivas e as efectivamente compiladas têm licenças próprias e têm de ser auditadas por build, não por tabela.
 
 | Componente | Uso possível | Licença | Observações de avaliação |
 |---|---|---|---|
@@ -807,10 +911,12 @@ A tabela abaixo foi verificada em 2026-10-20. A coluna da licença refere-se ao 
 | PROJ | Transformações de sistemas de coordenadas | MIT (permissiva) | Essencial para transformações geodésicas corretas. Não é dispensável no Rust: ver §18.1. |
 | PDAL | Processamento de nuvens de pontos | BSD (permissiva) | Inclui componentes da SuiteSparse sob BSD. Útil ao integrar LiDAR e, em especial, na filtragem de solo para obter DTM, que os motores de SfM não realizam. |
 | GTSAM | Estimativa de estado e grafos de fatores | BSD simplificada (com Eigen MPL2, METIS Apache-2.0, CCOLAMD BSD-3) | Considerar para fusão de poses, GNSS/IMU e otimização de grafos. |
-| Open3D | Processamento 3D, registo e visualização | MIT (permissiva) | Útil para protótipos e avaliação de operações em nuvens e malhas. |
-| Rasterio | API Python para rasters geoespaciais | BSD-3-Clause (permissiva) | Simplifica protótipos; depende do ecossistema GDAL. |
-| CloudCompare | Inspeção e comparação de nuvens | GPL-3.0 (copyleft forte) | Excelente ferramenta externa de referência e QA, executada fora do produto. Não é núcleo. |
+| Open3D | Processamento 3D e registo de nuvens | MIT (permissiva) | Base da filtragem de solo de `F4.E8`, e útil para protótipos. **Já não é a via de visualização do projecto**: a visualização passa a ser interna, em `F9.E2`, e o Open3D mantém-se pelo que faz, que é o registo e a filtragem. |
+| Rasterio | API Python para rasters geoespaciais | BSD-3-Clause (permissiva) | **Escolhida** para a ortoimagem de §13.5 e para a publicação dos rasters de §13.6. Depende do ecossistema GDAL, que o wheel embebe, e por isso não introduz dependência de sistema. A árvore transitiva do wheel tem de ser auditada por build. |
+| CloudCompare | Inspeção e comparação de nuvens | GPL-3.0 (copyleft forte) | Excelente ferramenta externa de referência e QA, executada fora do produto. Não é núcleo, e a visualização interna de `F9.E2` não a torna dispensável: as funções são diferentes. |
 | ONNX Runtime | Execução de descritores e correspondentes aprendidos | MIT (permissiva) | Necessário para os descritores aprendidos suportados pelo COLMAP (ALIKED, LoMa, LightGlue). |
+| Rasterização de superfície | Implementação própria em Rust, no núcleo | Apache-2.0 (a do próprio projecto) | **Escolhida** para §13.6. Alternativas avaliadas: Open3D e CloudCompare, que têm interface gráfica e das quais a segunda é copyleft forte; um motor de GPU, que violaria o princípio CPU-first de §3.3; e um motor externo de rasterização, que acrescentaria uma dependência para algo que o projecto implementa com recursos já orçados. Registo em ADR-012. |
+| `tiff` (crate Rust) | Leitura e escrita de TIFF em Rust puro | MIT (permissiva) | **Escolhida** para o TIFF intermédio de §13.6, com as features de compressão desligadas, de modo a não ter dependências transitivas. A compressão final é a do COG, publicada pela camada científica. Registo em ADR-013. |
 
 **Policy de licenças do núcleo.** A proposta é manter o núcleo distribuível livre de copyleft forte. Componentes AGPL ou GPL podem ser executados como processos externos opacos, comunicando por um protocolo documentado e sem ligação de código, mas não devem ser ligados ao núcleo nem aos seus adaptadores. Esta fronteira entre agregação simples e obra derivada depende dos fato e não apenas da forma da distribuição, e não é uma questão que este documento possa resolver; qualquer componente copyleft deve passar por revisão jurídica antes de ser adotado. A licença do próprio projeto é a Apache-2.0, em versão única, e está registada em ADR-010, em `processos/decisoes-motores.md`; as licenças dos componentes de terceiros são declaradas à parte, em `THIRD-PARTY.md`, e não se aplicam ao código do projeto.
 
@@ -832,8 +938,11 @@ O adaptador do caminho denso em CPU é o caso de referência. A fronteira tem de
 - **API local:** para aplicações de desktop e integração com outros sistemas.
 - **API de serviço:** para submissão de projetos e consulta de tarefas em ambiente distribuído.
 - **UI opcional:** inspeção do conjunto de dados, correção do cenário detetado, configuração de tolerâncias e visualização de relatórios.
+- **Visor de superfície:** visualização da geometria reconstruída, para inspeção humana. É uma interface opcional, fora do núcleo distribuído, e existe **fora do workspace** para que as suas dependências não entrem no inventário de licenças do projecto nem na distribuição do núcleo.
 
 A UI não deve ser necessária para executar o núcleo. Todos os parâmetros essenciais devem poder ser definidos por configuração versionada ou CLI.
+
+O visor tem uma condição de aceitação que não é estética: **os frames que apresenta têm de ser byte a byte os que o caminho headless escreve**. O visor não tem uma segunda implementação da rasterização, tem uma segunda interface para a mesma, e a igualdade entre as duas é verificável sem ecrã. Um visor que desenhasse a cena por um caminho próprio seria uma implementação divergente sem teste, e portanto uma fonte de resultados que o sistema não controla.
 
 ### 19.2 Formatos sugeridos
 
@@ -847,6 +956,10 @@ A UI não deve ser necessária para executar o núcleo. Todos os parâmetros ess
 - STAC para catalogação de ativos geoespaciais quando adequado.
 
 A escolha final deve privilegiar formatos interoperáveis e preservar CRS, unidades, timestamps, no-data, resolução e proveniência. O Cloud Optimized GeoTIFF é um padrão de organização de GeoTIFF com tiles e níveis de resolução que favorecem acesso parcial; não é, por si só, um algoritmo de reconstrução.
+
+A rasterização de §13.6 introduz um par de formatos, e a razão do par é a proveniência e não a conveniência. O núcleo escreve um **TIFF intermédio**, sem compressão, e a camada científica reescreve-o como **Cloud Optimized GeoTIFF**. São dois produtos com uma linhagem, e não um: o intermédio tem hash e é produto intermédio, e o publicado é o produto final. A razão é que a organização COG — tilling, overviews e compressão — é da cadeia geoespacial, que é da camada científica, e a transformação para o CRS de destino é geodésia e também. O núcleo fica em espaço de câmara, onde não há CRS, e um raster em grelha de câmara tem por isso o `crs` nulo, com a ausência declarada, e não um CRS inventado. Registo em ADR-013.
+
+O glTF/GLB e os 3D Tiles mantêm-se na lista para distribuição e intercâmbio, mas **não são necessários para a visualização interna**: o rasterizador de §13.6 projecta a malha directamente sobre a grelha, sem formato de intercâmbio pelo meio, e por isso o núcleo não depende de nenhum formato de exibição.
 
 ## 20. Segurança, integridade e reprodutibilidade
 
@@ -953,14 +1066,17 @@ Uma melhoria só deve ser integrada como padrão se:
 - ingestão de GCPs e checkpoints;
 - métricas independentes XY/Z;
 - relatório de incerteza e resíduos;
-- distinção formal entre controlo e validação.
+- distinção formal entre controlo e validação;
+- campo de resíduos de reprojecção por câmara, por rasterização, com a classe "sem observação" explícita.
 
 ### Fase 4 — Reconstrução densa
 
 - integração MVS;
 - nuvem densa, malha e DSM;
 - processamento por blocos e controlo de RAM;
-- deteção de zonas com cobertura insuficiente.
+- deteção de zonas com cobertura insuficiente;
+- mapa de cobertura e contagem de furos, e mapa de incerteza com legenda numérica;
+- desvio geométrico medido na simplificação, e não afirmado.
 
 ### Fase 5 — Planeador e deteção de cenário
 
@@ -987,12 +1103,24 @@ Uma melhoria só deve ser integrada como padrão se:
 
 Esta fase acrescenta a distribuição a um DAG e a uma cache que já existem desde as fases anteriores. O que é novo aqui é a escala e a tolerância a falhas, não o modelo de execução.
 
-### Fase 8 — Fusão heterogénea avançada
+### Fase 8 — Fusão heterogênea avançada
 
 - representação de evidência com incerteza e proveniência;
 - alinhamento de fontes com modelos geométricos adequados;
 - tratamento de incompatibilidade temporal;
-- benchmarks contra baselines estabelecidos.
+- benchmarks contra baselines estabelecidos;
+- verificação multivista por acumulação de profundidade, comparada com a referência de varrimento laser.
+
+### Fase 9 — Rasterização de superfície e registo de produtos
+
+- registo de produtos no catálogo, e esquema de produto aplicado a produtos reais;
+- rasterizador de software, em Rust, no núcleo, com a projecção do motor de SfM;
+- publicação de rasters em Cloud Optimized GeoTIFF, com CRS, `nodata`, overviews e legenda;
+- renderização multivista determinística.
+
+A fase foi criada depois da Fase 8, e por isso tem o número mais alto, mas as suas etapas são executáveis a partir da Fase 2: dependem de poses e de câmaras, e não de densidade. A numeração das fases é histórica e a ordem de execução é a de `docs/ROADMAP.md` §3.
+
+A razão de ser uma fase própria, e não mais um par de etapas dentro de uma fase existente, é o registo de produtos. O esquema de produto existe desde o início do projecto como ponto de ancoragem dos testes, mas **nenhum produto foi emitido**, e a tabela de produtos do catálogo nunca foi escrita. A partir desta fase, a proveniência deixa de ser uma capacidade do modelo de dados e passa a ser um registo que se pode consultar, e a rasterização é a primeira produção que depende disso, porque é a primeira que produz um artefacto derivado com um campo escalar, uma legenda e uma classe de ausência.
 
 A sequência é deliberada: construir primeiro uma linha de base verificável, e só depois introduzir complexidade distribuída e fusão avançada. Caso contrário, será difícil saber se um resultado errado vem da geometria, dos metadados, do planeador ou da distribuição.
 
@@ -1010,6 +1138,7 @@ A sequência é deliberada: construir primeiro uma linha de base verificável, e
 10. **Integração temporal incorreta:** dados de épocas diferentes podem representar mudanças reais, não erro geométrico.
 11. **Confusão entre densidade e precisão:** uma malha visualmente detalhada pode conter deformações.
 12. **Promessas energéticas:** sem medição, qualquer afirmação de baixo consumo é apenas hipótese.
+13. **Confusão entre modelo de câmara e plausibilidade visual:** um raster produzido com um modelo de câmara diferente do modelo das observações é um produto errado que não denuncia o erro, porque uma imagem que parece razoável não é um indício da sua correcção geométrica. É o gémeo do risco 11, e a mitigação é a mesma: a projecção do rasterizador tem de ser a do motor, verificada e não observada, conforme §10.1 e §13.6.4.
 
 ### Questões a responder experimentalmente
 
@@ -1020,6 +1149,7 @@ A sequência é deliberada: construir primeiro uma linha de base verificável, e
 - Qual a estratégia de blocos que mantém continuidade geométrica entre tiles?
 - Que classes de cenário são identificáveis com confiança apenas por metadados e imagens?
 - Qual a tolerância numérica adequada entre execução local, CPU distribuída e GPU?
+- Que desvio geométrico máximo de simplificação é admissível por classe de projeto, para que a visualização continue a ser fiel sem custar a resolução integral?
 
 ## 24. Exemplos técnicos
 
@@ -1197,7 +1327,7 @@ Estados sugeridos: `PENDING`, `READY`, `RUNNING`, `RETRY_WAIT`, `SUCCEEDED`, `SU
 
 ## 26. Referências técnicas iniciais
 
-As ligações abaixo são pontos de partida, verificados em 2026-10-20. A versão e a licença devem ser reverificadas no momento da integração e para a configuração concreta que será distribuída, porque tanto as versões como as licenças mudam.
+As ligações abaixo são pontos de partida, verificados nas datas indicadas em cada entrada. A versão e a licença devem ser reverificadas no momento da integração e para a configuração concreta que será distribuída, porque tanto as versões como as licenças mudam.
 
 ### Motores e bibliotecas
 
@@ -1239,6 +1369,19 @@ As ligações abaixo são pontos de partida, verificados em 2026-10-20. A versã
 27. **Incerteza de perturbação com cognizência de gauge em reconstrução por passagem directa:** https://arxiv.org/html/2610.07883 . Explica a liberdade de referencial da saída e a sua consequência sobre a variância entre execuções.
 28. **Global Structure-from-Motion Revisited (GLOMAP, ECCV 2024):** https://lpanaf.github.io/eccv24_glomap/ . Base do mapeador global integrado no COLMAP 4.0.
 
+### Rasterização e técnica gráfica
+
+29. **Heckbert, P. S., "Rasterizing 3D Triangles", em *Graphics Gems IV*, Academic Press, 1994, pp. 41–50.** Descrição publicada do rasterizador de triângulos com funções de aresta, coordenadas barycêntricas incrementais e interpolação de profundidade em perspectiva correcta. É a referência técnica de §13.6 e a fonte primária da implementação do rasterizador, conforme ADR-012.
+30. **Ericson, C., *Real-Time Collision Detection*, capítulo 5, "Rendering Triangles", §5.5 "Perspective-Correct Interpolation".** https://realtimecollisiondetection.net/ . Descrição da interpolação correcta em perspectiva de atributos de vértice, que é o que permite a um raster transportar um campo escalar e não apenas profundidade. Relevante para `campo` e `legenda` do esquema de produto.
+31. **COLMAP — formatos de modelo e modelos de câmara:** https://colmap.github.io/format.html . Lista dos modelos de câmara suportados pelo motor e a convenção de coordenadas de píxel que a §10.1 exige. A família de modelos implementada pelo rasterizador de §13.6 é a do motor, e não apenas a do modelo pinhole.
+32. **GDAL — driver Cloud Optimized GeoTIFF:** https://gdal.org/en/stable/drivers/raster/cog.html . Organisation do raster em tiles e níveis de resolução, usada na publicação dos rasters de §13.6, conforme ADR-013.
+33. **`rasterio` — documentação:** https://rasterio.readthedocs.io/ . API Python sobre o GDAL, usada pela camada científica para escrever o raster publicado.
+34. **`tiff` — crate Rust:** https://docs.rs/tiff . Leitura e escrita de TIFF em Rust puro, sem dependências transitivas na configuração usada.
+
+### Referência funcional externa consultada
+
+35. **Repositório externo de rasterização de terreno procedural**, consultado em 2026-10-22 apenas quanto à **funcionalidade** de que a §13.6 precisa: z-buffer, corte no plano near, níveis de detalhe e cor por campo escalar. O autor declarou autorização de uso e melhoria. **Nenhum código, expressão ou estrutura de ficheiros desse repositório foi reproduzido, e nenhum dos seus ficheiros integra o Khnumn.** A implementação deriva das fontes 29 a 34, conforme ADR-012. Registado aqui para que a procedência da técnica seja rastreável e não implícita.
+
 ### Nota sobre fontes e licenças
 
 A lista não é uma auditoria jurídica. Antes de incorporar uma dependência, verificar a licença do código, modelos treinados, dados de exemplo, plugins, bibliotecas transitivas e binários distribuídos. Verificar também termos de utilização dos dados de origem, atribuição, restrições de redistribuição e eventual necessidade de conservar avisos de copyright. Uma biblioteca com licença permissiva pode ser compilada com componentes sujeitos a condições diferentes.
@@ -1259,6 +1402,8 @@ Estas decisões estão tomadas. O registo com contexto, alternativas avaliadas e
 6. **Incerteza do controlo:** a covariância 3×3 de cada ponto de controlo é obrigatória, com método, instrumento, data e operador, e é validada contra a exatidão-alvo do projeto. A incerteza é propagada por **ensemble** sobre a etapa final, com número de amostras explícito; a via analítica, com um ajuste próprio em que o ponto entra como prior ponderado, fica prevista como escalada. Registo em ADR-007.
 7. **Marcas de controlo:** alvo circular e simétrico, de tamanho especificado em píxeis e verificado contra a GSD planeada antes do voo, com deteção automática como refinamento local e revisão humana das deteções. Registo em ADR-008.
 8. **Refinamento iterativo da via densa em CPU:** a via densa em CPU é conduzida por um ciclo com priori da iteração anterior, paragem por autoconvergência, orçamento declarado e retenção da melhor iteração. A comparação com a referência de acelerador é o critério de validação, e não de produção. Quando o requisito é densidade comparável à da via de acelerador, esta passa a ser o caminho primário em CPU. Registo em ADR-009.
+9. **Rasterização de superfície no núcleo:** a rasterização que produz os mapas de diagnóstico de §13.6 é implementação própria em Rust, no núcleo, sem dependências de execução, determinística e sem necessidade de ecrã. A projecção é a mesma função que apura os resíduos de reprojecção, e implementa a família de modelos de câmara do motor de SfM. Registo em ADR-012.
+10. **TIFF intermédio e publicação em COG:** o núcleo escreve um TIFF intermédio sem compressão e a camada científica reescreve-o como Cloud Optimized GeoTIFF, com CRS, `nodata`, overviews e as tags de proveniência e de legenda. O intermédio e o publicado são dois produtos com uma linhagem. Registo em ADR-013.
 
 ### 27.2 Decisões por fixar
 
@@ -1289,3 +1434,4 @@ A versão deste documento identifica o estado da proposta, e não o histórico d
 | 2026-10-20 | 0.1.0 | Reorganização da documentação e politização de licenças. A especificação e o roadmap passam para `docs/`, por descreverem o sistema e a ordem de construção; o registo de decisões e o protocolo de benchmark passam para `processos/`, por serem registos vivos que crescem com o trabalho. As referências entre documentos passaram a usar o caminho relativo à raiz do repositório, com a convenção declarada em cada ficheiro. O projeto passa a ter uma licença única, a Apache-2.0, com o texto em `LICENSE` na raiz, e as licenças dos componentes de terceiros passam a ser declaradas em `THIRD-PARTY.md`, que separa o que está aprovado para integração do que está efetivamente integrado. Registo em ADR-010. A ortografia foi uniformizada pela forma do Acordo Ortográfico de 1990, que estava misturada entre formas antigas e actuais ao longo dos cinco documentos. |
 | 2026-10-20 | 0.1.0 | Resolução dos três riscos residuais que restavam. Incerteza do controlo: a covariância 3×3 passa a ser obrigatória por ponto de controlo, com método, instrumento, data e operador, e a propagação passa a existir de fato, por ensemble sobre a etapa final, com a similaridade de 7 parâmetros ponderada pelas covariâncias; a §15.3 é reescrita porque a incerteza total passa a ter duas partes identificáveis. Marcas de controlo: nova §5.7 especifica o alvo circular e simétrico, o tamanho em píxeis verificado contra a GSD planeada antes do voo, a deteção automática como refinamento local com filtro de consistência e revisão humana; a §8.1 e a nova §8.4 passam a cobrir a deteção e a verificação de acquisibilidade. Refinamento iterativo: a via densa em CPU passa a ser um ciclo com priori da iteração anterior, paragem por autoconvergência, orçamento declarado e retenção da melhor iteração, o que inverte a prioridade dos caminhos quando o requisito é densidade comparável à da via de acelerador. O bloco `control` da configuração ganha a covariância obrigatória e o número de amostras, e nasce um bloco `dense` com o orçamento de iterações. |
 | 2026-10-20 | 0.1.0 | Resolução das duas decisões que estavam em aberto. Caminho da reconstrução densa em CPU: três caminhos declarados em §13.1 e em §3.3, com o núcleo 100% permissivo, o motor de MVS externo como adaptador opcional e instalável à parte, e o caminho de acelerador; a escolha passa a ser do planeador, segundo a capacidade do host, e a constar da proveniência de cada produto. Restrição de pontos de controlo: cadeia concreta sobre as ligações Python do motor, com fixação explícita do gauge por três pontos, e a limitação de a incerteza de levantamento não entrar como prior ponderado passa a ser declarada em §10.4, §11.4 e §15.3. Método de controlo por omissão: priors de pose GNSS, com a transformação de similaridade reservada ao último recurso e nunca a originar um estado conforme. §27 reestruturada em decisões já fixadas e decisões por fixar, com os registos ADR-005 e ADR-006 correspondentes. |
+| 2026-10-22 | 0.1.0 | Introdução da rasterização de superfície. A §1.1 prometia mapas de cobertura, densidade, qualidade e incerteza, e §22 previa a deteção de zonas com cobertura insuficiente; nenhum dos dois tinha produtor, e três das métricas de §15.1 — cobertura espacial e zonas sem observações, consistência entre vistas, e o desvio introduzido pela simplificação — não tinham instrumento. A nova §13.6 especifica a rasterização como instrumento de diagnóstico: projeta a geometria medida sobre uma grelha 2D sob um modelo de câmara explícito, e devolve um campo quantificado, com classe de ausência explícita, determinismo, e a proibição de usar a plausibilidade visual como métrica. Em consequência: o diagrama de §6 ganha o ramo de rasterização a alimentar a validação; §6.1 ganha o módulo Rasterizador, à posição 8; §10.1 fixa que a projecção do rasterizador é a do motor de SfM e implementa a família de modelos de câmara, e não apenas o pinhole, porque o primeiro conjunto de validação usa câmaras `THIN_PRISM_FISHEYE`; §13.5 distingue a ortoimagem da rasterização; §14.4 liga a grelha de evidência por célula à grelha de mapa; §15.1 ganha as nove métricas derivadas de projecção; §18.1 confirma que o rasterizador em Rust não é uma excepção à regra da geodesia, porque opera em espaço de câmara; §18.2 rectifica o papel do Open3D e do CloudCompare e acrescenta o rasterizador próprio e o crate `tiff`; §19.1 e §19.2 fixam o visor de superfície com a regra de paridade byte a byte e o par de formatos TIFF intermédio e COG publicado; §22 ganha a Fase 9; §23 ganha o risco 13, confusão entre modelo de câmara e plausibilidade visual; §26 ganha as referências técnicas da técnica e o registo da referência funcional externa consultada, com a declaração de que nenhum código foi reproduzido; §27.1 ganha as decisões 9 e 10. Registo em ADR-012 e ADR-013. |

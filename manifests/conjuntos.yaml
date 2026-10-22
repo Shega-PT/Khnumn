@@ -73,14 +73,34 @@ conjuntos:
       - "reconstrução esparsa reprodutível e internamente consistente"
       - "erro de reprojecção e diagnóstico de degenerescência do modelo"
       - "nuvem de pontos de referência por varrimento laser, para a qualidade da superfície"
+      - "qualidade da projecção do rasterizador, comparada com os mapas de profundidade do varrimento laser"
     nao_valida:
       - "exactidão posicional absoluta: o conjunto não tem datum de levantamento"
       - "georreferenciação por pontos de controlo: não há GCPs de topografia"
       - "cobertura de solo e produção de DTM: é uma cena de arquitectura"
+      - "exactidão posicional absoluta da rasterização: o conjunto não tem datum, e a rasterização só valida a projecção"
     nota_estado: >-
       Com este conjunto, o estado de aceitação de um produto é NOT_VALIDATED.
       Não há referência geodésica independente, e um PASS seria uma afirmação
-      sem medição.
+      sem medição. A validação da projecção, que é interna, é possível com a
+      verdade-fundamento do varrimento laser, e está declarada em
+      processos/alvo-validacao.md §3.2.
+    verdade_fundamento_rasterizacao:
+      - ficheiro: "terrace_scan_clean.7z"
+        url: "https://www.eth3d.net/data/terrace_scan_clean.7z"
+        tamanho_aproximado: "0.3 GB"
+        licenca: "CC-BY-NC-SA-4.0"
+        papel: "nuvem de varrimento laser, com os outliers removidos. Serve de referência para a distância ponto-superfície e para a completude da superfície reconstruída"
+      - ficheiro: "terrace_dslr_scan_eval.7z"
+        url: "https://www.eth3d.net/data/terrace_dslr_scan_eval.7z"
+        tamanho_aproximado: "0.1 GB"
+        licenca: "CC-BY-NC-SA-4.0"
+        papel: "o mesmo varrimento, restrito aos pontos observados por duas ou mais imagens. É a comparação justa para avaliação MVS, em que os pontos nunca observados não penalizam a completude"
+      - ficheiro: "terrace_dslr_depth.7z"
+        url: "https://www.eth3d.net/data/terrace_dslr_depth.7z"
+        tamanho_aproximado: "0.4 GB"
+        licenca: "CC-BY-NC-SA-4.0"
+        papel: "mapas de profundidade renderizados a partir do varrimento. Servem de verdade-fundamento pixel a pixel para o campo de profundidade do rasterizador de §13.6 de docs/Khnumn.md"
 
   - nome: campo-de-ensaio-proprio
     descricao: >-

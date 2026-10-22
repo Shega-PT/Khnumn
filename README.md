@@ -161,7 +161,7 @@ Conforme a geometria e a qualidade de entrada:
 - modelo digital de superfície (DSM/MDS);
 - modelo digital do terreno (DTM/MDT), quando é possível separar terreno e objetos;
 - ortomosaico ou ortoimagem;
-- mapas de cobertura, densidade, qualidade e incerteza;
+- **mapas de cobertura, densidade, qualidade e incerteza**, como campos quantificados e não como imagens, conforme `docs/Khnumn.md` §13.6;
 - relatórios de calibração, georreferenciação e validação;
 - metadados de proveniência, que rastreiam cada produto até às fontes.
 
@@ -188,7 +188,8 @@ O sistema foi desenhado para funcionar num computador modesto, com CPU e RAM com
 ├── Cargo.toml                 a raiz do espaço de trabalho Rust
 ├── crates/                    o núcleo, em Rust
 │   ├── khnumn-core/           modelo, esquemas, catálogo, DAG, proveniência
-│   └── khnumn-cli/            o executável `khnumn`
+│   ├── khnumn-cli/            o executável `khnumn`
+│   └── khnumn-render/         rasterização de superfície (Fase 9, ADR-012)
 ├── python/khnumn/             a camada científica, em Python
 ├── schemas/                   os contratos JSON Schema versionados
 ├── manifests/                 a declaração dos conjuntos de dados e os seus hashes
@@ -214,7 +215,7 @@ O sistema foi desenhado para funcionar num computador modesto, com CPU e RAM com
 |---|---|
 | [`docs/Khnumn.md`](docs/Khnumn.md) | A especificação técnica. Objectivo, âmbito, princípios, arquitectura, modelo de dados, algoritmo, incerteza, formatos, plano de testes, plano de fases e referências. É o documento de referência |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | A ordem de execução, decomposta em fases e etapas, com estados e dependências. Sem datas nem estimativas de esforço |
-| [`docs/modelo-metadados.md`](docs/modelo-metadados.md) | O modelo de dados versionado: esquema, ausência explícita, unidades, incerteza e proveniência |
+| [`docs/modelo-metadados.md`](docs/modelo-metadados.md) | O modelo de dados versionado: esquema, ausência explícita, unidades, incerteza e proveniência; a revisão do esquema de produto de 2026-10-22 e a regra da declaração de ausência de CRS |
 | [`processos/protocolo-benchmark.md`](processos/protocolo-benchmark.md) | O protocolo de benchmark: conjuntos de dados, partições, controlo e verificação, métricas, tolerâncias, reprodutibilidade e template de relatório |
 | [`processos/decisoes-motores.md`](processos/decisoes-motores.md) | O registo de decisões de motores e licenças: matriz por função, riscos de construção, e os registos de decisão (ADR) com contexto, decisão e consequências |
 | [`processos/alvo-validacao.md`](processos/alvo-validacao.md) | O primeiro alvo de validação, os alvos secundários por função, e o que cada um serve e o que não serve |
@@ -251,7 +252,7 @@ efectivamente instalado estão em
 
 ## 11. Estado atual e limitações
 
-**O que existe:** a especificação técnica, as decisões de arquitectura tomadas e registadas, o protocolo com que o sistema é medido, a Fase 0 do roadmap fechada, e um núcleo executável que ingere imagens, as inventaria com hash, lê os seus metadados, avalia a sua qualidade, as executa num grafo de tarefas com cache por hash, e reconstrói uma cena esparsa pelo motor de SfM.
+**O que existe:** a especificação técnica, as decisões de arquitectura tomadas e registadas, o protocolo com que o sistema é medido, a Fase 0 do roadmap fechada, a Fase 2 do roadmap concluída, e um núcleo executável que ingere imagens, as inventaria com hash, lê os seus metadados, avalia a sua qualidade, as executa num grafo de tarefas com cache por hash, e reconstrói uma cena esparsa pelo motor de SfM. O esquema de produto é revisto para incluir o formato em disco, o campo escalar de um mapa, a sua legenda e a declaração de ausência de CRS, e o registo de produtos passa a ser possível no catálogo. A Fase 9 está criada no roadmap, com as suas etapas em estado planeado, e a rasterização de superfície é a sua primeira produção.
 
 **O que não existe:** a georreferenciação com pontos de controlo, a propagação da incerteza, a reconstrução densa e a distribuição. A sequência de implementação está descrita no [roadmap](docs/ROADMAP.md), e o estado de cada etapa therein.
 
@@ -271,7 +272,7 @@ A **política de núcleo** é manter o núcleo distribuível livre de copyleft f
 
 A tabela de motores, com a licença de cada um verificada a 2026-10-20, está em [`docs/Khnumn.md` §18.2](docs/Khnumn.md) e detalhada em [`processos/decisoes-motores.md`](processos/decisoes-motores.md). A lista de referências técnicas, com versão e data, está em [`docs/Khnumn.md` §26](docs/Khnumn.md). A **declaração das licenças de terceiros** é o ficheiro [`THIRD-PARTY.md`](THIRD-PARTY.md), e é a que está em uso numa dada versão.
 
-A auditoria de licenças de um projeto concreto — incluindo modelos treinados, dados de exemplo, bibliotecas transitivas e binários distribuídos — é uma tarefa de integração, e não uma afirmação que este documento possa fazer.
+A auditoria de licenças de um projeto concreto — incluindo modelos treinados, dados de exemplo, bibliotecas transitivas e binários distribuídos — é uma tarefa de integração, e não uma afirmação que este documento possa fazer. A partir da integração do `rasterio`, a auditoria cobre também a **árvore transitiva** do wheel, e não só o requisito declarado, conforme `processos/auditoria-licencas.md` §2.5. A rasterização de superfície é implementação própria em Rust, Apache-2.0, sem dependências de execução, e está registada em ADR-012 de `processos/decisoes-motores.md`.
 
 ## 13. Licença do projeto
 

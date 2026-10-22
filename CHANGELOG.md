@@ -33,7 +33,10 @@ usam o caminho relativo à raiz do repositório.
   `khnumn-tarefa-v1` entre o núcleo e a camada.
 - **Esquemas versionados** (`schemas/`): `activo-v1`, `controlo-v1`,
   `projecto-v1` e `produto-v1`, embutidos no binário e com resolução de
-  referências por registo de recursos.
+  referências por registo de recursos. O `produto-v1` foi revisto para incluir
+  o formato em disco, o nome do campo escalar de um mapa, a sua legenda
+  numérica e a declaração de ausência de CRS, seguindo o mesmo idioma que a
+  incerteza já usava, e aplicando-se a produtos reais a partir da Fase 9.
 - **Fase 0 do roadmap** (`F0.E1` a `F0.E9`): alvo de validação, hardware de
   referência, tolerâncias por classe de projeto, protocolo de checkpoints,
   modelo de metadados versionado, política de falhas, auditoria de licenças,
@@ -46,6 +49,11 @@ usam o caminho relativo à raiz do repositório.
   `extrair`, `corresponder` e `mapear`, para que o pico de memória de cada
   fase seja o seu e não a soma, com o gauge declarado e o diagnóstico do
   modelo.
+- **Fase 9 do roadmap** (`F9.E1` a `F9.E4`): registo de produtos no
+  catálogo, rasterizador de software em Rust, publicação em COG e renderização
+  multivista determinística, com as etapas distribuídas `F3.E13`, `F4.E11`,
+  `F4.E12` e `F8.E6`. A numeração das fases é histórica e a ordem de
+  execução é a da §3 do roadmap.
 - **Fase 2 do roadmap** (`F2.E1` a `F2.E6`): o pipeline de reconstrução
   esparsa, executado pela CLI como três tarefas do grafo, com os parâmetros
   do motor registados, o limite de memória declarado por tarefa, o gauge
@@ -68,8 +76,39 @@ usam o caminho relativo à raiz do repositório.
 - `processos/protocolo-benchmark.md`: §2 preenchida com o hardware medido,
   §4 com o protocolo de checkpoints, e §6 com as três classes de projeto e
   as suas tolerâncias.
-- `docs/ROADMAP.md`: `F0.E9` passa a depender explicitamente de `F0.E7`, e o
-  estado de cada etapa reflecte o que foi verificado.
+- `docs/Khnumn.md` §13.5: distinção entre a ortoimagem e a rasterização;
+- `docs/Khnumn.md` §13.6: secção nova, rasterização de superfície e mapas de
+  diagnóstico;
+- `docs/Khnumn.md` §14.4: ligação entre a rasterização e a evidência por
+  célula;
+- `docs/Khnumn.md` §15.1: nove métricas derivadas de projecção;
+- `docs/Khnumn.md` §18.1: confirmação de que a rasterização em Rust não é
+  uma excepção à regra da geodesia;
+- `docs/Khnumn.md` §18.2: rectificação do papel do Open3D e do CloudCompare,
+  e acrescento do rasterizador e do crate `tiff`;
+- `docs/Khnumn.md` §19.1: o visor de superfície e a regra de paridade
+  byte a byte;
+- `docs/Khnumn.md` §19.2: o par de formatos TIFF intermédio e COG publicado;
+- `docs/Khnumn.md` §22: a Fase 9 e os bullets das Fases 3, 4 e 8;
+- `docs/Khnumn.md` §23: o risco 13, confusão entre modelo de câmara e
+  plausibilidade visual;
+- `docs/Khnumn.md` §26: as referências técnicas da técnica e o registo da
+  referência funcional externa consultada, com a declaração de que nenhum
+  código foi reproduzido;
+- `docs/Khnumn.md` §27.1: as decisões 9 e 10, com remissão para ADR-012 e
+  ADR-013;
+- `docs/Khnumn.md` §29: a entrada do registo de revisões;
+- `processos/decisoes-motores.md`: ADR-012 e ADR-013, a matriz de motores
+  e o consumo de recursos;
+- `processos/protocolo-benchmark.md`: a condição de comparabilidade das
+  rasterizações e a cláusula de que a imagem não é um critério de aceitação;
+- `processos/hardware-referencia.md`: a linha da rasterização e da
+  publicação de rasters;
+- `processos/alvo-validacao.md`: a verdade-fundamento da rasterização no
+  ETH3D, e o que valida e o que não valida;
+- `processos/auditoria-licencas.md`: a regra da árvore transitiva dos wheels;
+- `THIRD-PARTY.md`: `rasterio`, o crate `tiff`, e a rectificação do papel
+  do Open3D e do CloudCompare.
 
 ### Registado
 
@@ -176,6 +215,30 @@ nesta data.**
   ao último recurso e nunca a originar um estado conforme. §27 reestruturada
   em decisões já fixadas e decisões por fixar, com os registos ADR-005 e
   ADR-006 correspondentes.
+
+- **Rasterização de superfície.** A §1.1 prometia mapas de cobertura,
+  densidade, qualidade e incerteza, e §22 previa a deteção de zonas com
+  cobertura insuficiente; nenhum dos dois tinha produtor, e três das métricas
+  de §15.1 — cobertura espacial e zonas sem observações, consistência entre
+  vistas, e o desvio introduzido pela simplificação — não tinham instrumento.
+  A nova §13.6 especifica a rasterização como instrumento de diagnóstico:
+  projeta a geometria medida sobre uma grelha 2D sob um modelo de câmara
+  explícito, e devolve um campo quantificado, com classe de ausência
+  explícita, determinismo, e a proibição de usar a plausibilidade visual como
+  métrica. Registo em ADR-012 e ADR-013.
+- **Referência funcional externa.** Um repositório de rasterização de terreno
+  procedural foi consultado quanto à funcionalidade necessária — z-buffer,
+  corte no plano near, níveis de detalhe, cor por campo escalar — e o seu
+  autor declarou autorização de uso e melhoria. Nenhum código, expressão ou
+  estrutura de ficheiros desse repositório foi reproduzido, e nenhum dos seus
+  ficheiros integra o Khnumn. A implementação deriva das descrições publicadas
+  (Heckbert 1984; Ericson), e a procedência está registada em §26 de
+  `docs/Khnumn.md` e em ADR-012.
+- **A auditoria de licenças cobre a árvore transitiva dos wheels**, e não
+  só o requisito declarado, com o `rasterio` como primeiro caso. A regra está
+  em `processos/auditoria-licencas.md` §2.5, e o `rasterio` fica na §2.2 de
+  `THIRD-PARTY.md` até a verificação estar feita.
+
 
 [Unreleased]: https://example.invalid/khnumn/compare/v0.1.0...HEAD
 [0.1.0]: https://example.invalid/khnumn/releases/tag/v0.1.0

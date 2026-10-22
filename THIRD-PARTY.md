@@ -53,8 +53,9 @@ A lista abaixo é a **shortlist aprovada**. Não é a lista do que está instala
 
 | Componente | Papel | Licença | Tipo de integração | Quando entra |
 |---|---|---|---|---|
-| Open3D | Processamento de nuvens de pontos, registo e visualização | MIT | Ferramenta de protótipo, e base da filtragem de solo | `F4.E8` |
-| rasterio | API Python para rasters geoespaciais, sobre GDAL embebido | BSD-3-Clause | Núcleo, opcional | `F4.E7` |
+| Open3D | Processamento de nuvens de pontos e registo | MIT | Base da filtragem de solo | `F4.E8` |
+| Rasterio | API Python para rasters geoespaciais, sobre GDAL embebido | BSD-3-Clause | Núcleo, opcional, quando a auditoria da árvore transitiva do wheel estiver feita | `F4.E7` e `F9.E3` |
+| `tiff` (crate Rust) | Leitura e escrita de TIFF em Rust puro, sem compressão | MIT | Núcleo, sem dependências transitivas | `F9.E3` |
 | ONNX Runtime | Execução de descritores e correspondentes aprendidos | MIT | Transitivo, opcional | `F2.E2`, se a medição justificar |
 | Ceres Solver | Otimização não linear e ajuste de feixes | New BSD | Transitivo, via o motor de SfM | Já incluído no motor embebido |
 | OpenMVG | SfM e visão geométrica | MPL-2.0 | Alternativa de referência | Em avaliação |

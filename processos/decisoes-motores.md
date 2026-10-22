@@ -1,6 +1,6 @@
 # Khnumn — Registo de decisões de motores e licenças
 
-**Âmbito:** este documento fixa as escolhas de motor, as alternativas avaliadas e as restrições que as condicionam. É a fonte de verdade para a tabela de §18.2 de `docs/Khnumn.md` e para o item 5 e o item 9 das decisões de §27.
+**Âmbito:** este documento fixa as escolhas de motor, as alternativas avaliadas e as restrições que as condicionam. É a fonte de verdade para a tabela de §18.2 de `docs/Khnumn.md` e para as decisões fixadas de §27.1 do mesmo documento.
 **Convenção de referências:** as menções a outros documentos deste repositório usam o caminho relativo à raiz do repositório.
 
 
@@ -8,7 +8,7 @@
 
 **Convenção sobre o nome:** os registos de decisão referem o nome do projeto vigente na data em que foram escritos. O nome actual é Khnumn, desde 2026-10-20; as decisões anteriores a essa data referem Mímir, que era o nome de trabalho então.
 
-**Versão do registo:** 0.1.0 · **Data:** 2026-10-20 · **Idioma:** Português europeu
+**Versão do registo:** 0.1.0 · **Data:** 2026-10-22 · **Idioma:** Português europeu
 
 ---
 
@@ -55,16 +55,19 @@ A coluna "licença" refere-se ao código do componente; as dependências transit
 | Superfície em CPU, núcleo permissivo | COLMAP `delaunay_mesher` sobre a nuvem esparsa | New BSD | Poisson sobre a esparsa | Densidade substancialmente menor; é o caminho CPU por omissão |
 | Malha | COLMAP (Poisson, Delaunay, advancing front) | New BSD | OpenMVS (AGPL, excluído), Poisson original | Poisson exige nuvem quase livre de outliers; Delaunay escala melhor |
 | Texturização | COLMAP `mesh_texturer` | New BSD | OpenMVS (AGPL, excluído) | Atribui cada face à melhor vista por área projectada e ângulo |
-| Ortoimagem | `rasterio`, que embute o GDAL | BSD-3-Clause | GDAL de sistema | Não é coberta por nenhum motor de SfM ou MVS; decisão a confirmar em `F4.E7` |
+| Ortoimagem | `rasterio`, que embute o GDAL | BSD-3-Clause | GDAL de sistema | Não é coberta por nenhum motor de SfM ou MVS; decisão a confirmar em `F4.E7`. O mesmo componente publica os rasters de §13.6, em `F9.E3` |
 | DTM e filtragem de solo | Implementação própria, sobre `Open3D` | MIT | PDAL (BSD, sem wheel no PyPI e sem `conda` neste ambiente) | Não é coberta por nenhum motor de SfM ou MVS; ver `processos/auditoria-licencas.md` §2.4 |
 | Nuvens de pontos, registo | `Open3D` | MIT | PDAL (BSD), CloudCompare (GPL, apenas ferramenta externa) | O CloudCompare é ferramenta de QA, não componente |
+| Rasterização de superfície | Própria, em Rust | Apache-2.0 | `Open3D` (MIT), `CloudCompare` (GPL-3.0), motor de GPU (wgpu, OpenGL), motor de referência externo | As duas primeiras têm interface gráfica e a segunda é copyleft forte, e o ambiente de referência não tem acelerador. Ver ADR-012 |
+| Escrita de rasters geoespaciais | `rasterio`, que embute o GDAL | BSD-3-Clause | GDAL de sistema | Serve a ortoimagem de §13.5 e a publicação dos rasters de §13.6; a árvore transitiva do wheel tem de ser auditada |
+| TIFF intermédio | crate `tiff`, em Rust | MIT | — | Sem features de compressão, para zero dependências transitivas; a compressão final é a do COG. Ver ADR-013 |
 | Geodesia e CRS | `pyproj`, sobre PROJ 9.8.1 | MIT | proj4rs (Rust puro, insuficiente) | Sem WKT e sem transformações 3D ou ortométricas; não substitui a PROJ |
 | Ajuste de feixes e controlo | COLMAP, via ligações Python, com Ceres | New BSD | GTSAM (BSD) para grafos de fatores | O ajuste é do motor; a restrição de GCP usa pontos constantes e fixação do gauge, ver §6.2 |
 | Propagação da incerteza do controlo | Ensemble próprio sobre a etapa final, sem dependência nova | — | Ajuste de feixes próprio com prior ponderado, em Ceres | Estimativa numérica da dispersão; escalada prevista, ver ADR-007 |
 | Detecção de marcas de controlo | Implementação própria sobre projeções e ajuste de elipse | — | Detectores aprendidos, à base de redes convolucionais | Sem dependência de modelos treinados; ver ADR-008 |
 | Catálogo e metadados | SQLite, via `rusqlite` com SQLite embebido | MIT | PostGIS (GPL) | A escolha do modo local ou servidor decide a dependência |
 | Grafo de fatores e fusão de poses | GTSAM | BSD | — | Eigen, METIS e CCOLAMD têm licenças próprias |
-| Visualização e QA | `Open3D` e `CloudCompare` | MIT / GPL | — | CloudCompare executado fora do produto |
+| Visualização e QA | Rasterização própria, em Rust | Apache-2.0 | `Open3D` (MIT), `CloudCompare` (GPL) | A visualização passa a ser interna, em `F9.E2`; o CloudCompare mantém-se como ferramenta externa de QA e o Open3D como base da filtragem de solo de `F4.E8`. Ver ADR-012 |
 | Reconstrução aprendida | Sem uso na cadeia principal | — | DUSt3R, MASt3R, VGGT | Ver §11.6 de `docs/Khnumn.md`: apenas como candidato, sob verificação geométrica clássica |
 
 ---
@@ -119,6 +122,7 @@ Valores a medir com o protocolo, e não a assumir. As mitigações indicadas sã
 | Ajuste de feixes | Tempo de repetição do ajuste global em coleções grandes | Limitar correspondências, reduzir resoluções, escolher o backend acelerado, ajustar a frequência do ajuste global |
 | Reconstrução densa | Memória de GPU e de disco | Limitar o tamanho máximo de imagem, o número de vistas de origem, o raio e o passo da janela, a cache e o número de iterações |
 | MVS em grande escala | Memória e tempo de execução | Particionar a cena em clusters e podar imagens redundantes, com particionamento externo |
+| Rasterização de superfície | Memória do framebuffer, do depth buffer e da malha carregada | Rasterizar por blocos, com orçamento declarado por tarefa; o TIFF intermédio descomprimido é o pico a vigiar |
 
 O número de vistas de origem por vista de referência e o raio da janela são os dois parâmetros que mais influenciam o custo da etapa densa, e os dois degradam a qualidade quando reduzidos. Qualquer optimização neste troço tem de ser avaliada contra as métricas de §5.1 do protocolo, e não apenas contra o tempo.
 
@@ -127,6 +131,8 @@ Valores de referência para a etapa densa em CPU, medidos num conjunto de 11 ima
 Para o caminho em acelerador, a mesma métrica de custo é dominada pela memória da GPU, e não pela RAM, o que inverte a estratégia de particionamento de §16.1 de `docs/Khnumn.md` consoante o caminho escolhido.
 
 Duas estruturas multiplicam este custo e precisam de ser orçamentadas à parte. A propagação da incerteza do controlo, por ensemble, executa a etapa final N vezes, mas as etapas anteriores são partilhadas por todos os membros e ficam em cache, pelo que o custo real é N vezes apenas a etapa final, e não N vezes o pipeline. O refinamento iterativo da via densa repete a reconstrução, e cada passagem seguinte é mais barata do que a primeira, porque parte de uma nuvem já existente. O número de execuções de ambos os casos é um parâmetro explícito, e o custo total tem de ser estimado antes de a execução começar, para que o planeador possa escolher o método de controlo e o caminho de superfície que caibam no orçamento.
+
+A rasterização de superfície, de §13.6 de `docs/Khnumn.md`, tem um perfil de custo próprio e diferente dos anteriores. O estrangulamento não é o número de imagens nem o tempo de execução, mas a memória do raster: o framebuffer e o depth buffer são proporcionais à resolução de saída, e a malha carregada é proporcional ao número de faces. A rasterização por blocos resolve o primeiro, e a descarte do que já foi rasterizado resolve o segundo. O TIFF intermédio, sem compressão, é a escrita mais volumosa da cadeia e é por isso que é o pico a vigiar, e não o raster em si.
 
 ---
 
@@ -303,3 +309,27 @@ O resultado para Khnumn: **zero** correspondências de nome exato no GitHub, **z
 Os registos históricos de decisão mantêm o nome vigente na data em que foram escritos, e a convenção está declarada no topo do registo. Reescrevê-los tornaria a sequência anacrónica, e a história de um projeto é um activo, não um texto para uniformizar.
 
 A designação do titular dos direitos é provisoriamente *Khnumn contributors*, e tem de ser confirmada antes de qualquer distribuição, tal como previsto em ADR-010.
+
+### ADR-012 — Rasterização de superfície no núcleo
+
+**Estado:** proposta · **Data:** 2026-10-22
+
+**Contexto.** O sistema promete em §1.1 de `docs/Khnumn.md` mapas de cobertura, densidade, qualidade e incerteza, e §22 prevê a deteção de zonas com cobertura insuficiente; nenhum desses mapas tem produtor, e nenhum dos campos de §15.1 que dependem de uma projecção — a cobertura espacial, a consistência entre vistas e o desvio introduzido pela simplificação — é hoje apurável. A visualização está atribuída ao Open3D e ao CloudCompare, que são ferramentas com interface gráfica, e o CloudCompare é GPL-3.0, o que o exclui do produto pela política de §1. O ambiente de referência não tem acelerador, e §3.3 proíbe que o acelerador seja um pressuposto do binário distribuído.
+
+**Decisão.** O Khnumn implementa a rasterização de superfície em Rust, no núcleo, sem dependências de execução, determinística e sem necessidade de ecrã. A projecção usada é a mesma função que apura os resíduos de reprojecção, e implementa a família de modelos de câmara do motor de SfM, e não apenas o modelo pinhole de §10.1.
+
+**Alternativas avaliadas.** O Open3D e o CloudCompare cobrem a necessidade de ver, mas não são adequados ao produto: têm interface gráfica, e o segundo é copyleft forte. Um motor de GPU violaria o princípio CPU-first e tornaria o acelerador um pressuposto do formato de saída. Um motor de rasterização externo, de qualquer espécie, acrescentaria uma dependência com a mesma função de um componente que o projecto pode implementar com uma dependência de recursos já orçada.
+
+**Consequências.** A visualização passa a ser interna, e a linha de §2 sobre visualização e QA muda de papel: o Open3D mantém-se como base da filtragem de solo de `F4.E8`, e o CloudCompare como ferramenta externa de QA. É trabalho de implementação e não de integração, e por isso tem de ser validado contra casos analíticos e contra a projecção do próprio motor, e não apenas observado. A rasterização não substitui o GDAL na ortoimagem de §13.5, que é uma etapa de reprojecção de rasters: as duas resolvem problemas diferentes, e a §13.6 não produz ortoimagem. A decisão cria um risco próprio, registado em §23 de `docs/Khnumn.md`: um raster produzido com um modelo de câmara diferente do modelo das observações é um produto errado que não denuncia o erro, porque a plausibilidade visual não é um indício de erro geométrico.
+
+**Procedência da técnica.** A técnica de rasterização de triângulos com z-buffer e interpolação de profundidade por 1/z é de uso corrente, e anterior a qualquer implementação concreta de referência; a implementação do Khnumn deriva das descrições publicadas (Heckbert 1984; Bourke) e da especificação de modelos de câmara do COLMAP, com as fontes em §26 de `docs/Khnumn.md`. Um repositório externo foi consultado quanto à funcionalidade necessária —z-buffer, corte no plano near, níveis de detalhe, cor por campo escalar— e o seu autor declarou autorização de uso e melhoria; nenhum código, expressão ou estrutura de ficheiros desse repositório foi reproduzido, e nenhum dos seus ficheiros integra o Khnumn.
+
+### ADR-013 — TIFF intermédio em Rust e publicação em COG na camada científica
+
+**Estado:** proposta · **Data:** 2026-10-22
+
+**Contexto.** §19.2 de `docs/Khnumn.md` prefere GeoTIFF e Cloud Optimized GeoTIFF para rasters georreferenciados, e a §18.2 já aponta o `rasterio` como a via. Publicar um COG exige tilling, overviews e compressão, que a escrita directa de TIFF não produz. Rust não tem codec de PNG, e o `tiff` em Rust não faz a organização de COG. A CRS de destino é uma necessidade geodésica, e a §18.1 determina que a geodesia passe obrigatoriamente pela PROJ.
+
+**Decisão.** O núcleo escreve um TIFF intermédio, sem compressão, e a camada científica reescreve-o como Cloud Optimized GeoTIFF, com CRS, `nodata`, overviews e as tags de proveniência e de legenda.
+
+**Consequências.** São dois produtos com uma linhagem, e não um: o intermédio tem hash e é produto intermédio, e o publicado é o produto final. O campo `format` do esquema de produto distingue `tiff` de `cog`. A divisão respeita a §18.1, porque a transformação para o CRS de destino é geodésia e a geodesia é da camada científica; o núcleo fica em espaço de câmara, onde não há CRS. A auditoria de licenças tem de cobrir a árvore transitiva do wheel do `rasterio`, e não apenas o requisito directo, ou a afirmação de §1.2 não se sustenta.

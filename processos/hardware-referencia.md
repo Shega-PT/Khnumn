@@ -75,6 +75,7 @@ com a mesma clareza que as decisões que habilitam.
 | Ensemble de propagação da incerteza (`F3.E8`) | **Executável, com N reduzido** | O número de amostras tem de caber no orçamento, e a despesa real tem de ser medida em vez de presumida. O número mínimo declarado por omissão é 20, e o mínimo do protocolo é de 30 pontos de verificação, que são coisas diferentes |
 | Ajuste global sobre coleções grandes | **Executável, com poda** | O número de imagens e a resolução de entrada são podados, e a poda é **pré-processamento declarado**, igualado entre comparações |
 | Processamento por blocos (`F4.E5`) | **Executável** | A estratégia de blocos é a que este perfil exige, e não a que uma máquina grande tornaria desnecessária |
+| Rasterização e publicação de rasters (`F9.E2`, `F9.E3`) | **Executável** | O orçamento de 500 MiB obriga a rasterizar por blocos e a publicar por tiles. O pico a vigiar é o TIFF intermédio descomprimido, e não o raster em si: o framebuffer e o depth buffer de uma saída de 1280×720 ocupam menos de 8 MiB, e o volume está na escrita |
 
 ### 3.1 O que isto não é
 

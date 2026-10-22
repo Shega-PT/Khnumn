@@ -125,6 +125,38 @@ filtragem de solo não é coberta por nenhum motor de SfM ou MVS, e o Khnumn
 tem de a compor e documentar como etapa autónoma (`docs/Khnumn.md` §13.3).
 A decisão de detalhe fica em `F4.E8`; o registo aqui é da restrição.
 
+### 2.5 A árvore transitiva dos wheels, e uma regra que daí resulta
+
+A auditoria lê `requirements.lock` e `Cargo.lock`, e **lê o requisito
+directo**, não a árvore que ele transporta. Isso é suficiente enquanto as
+dependências são bibliotecas de código com as suas dependências declaradas
+nos metadados do pacote, e deixa de ser suficiente no momento em que entra um
+wheel que embute uma biblioteca nativa completa.
+
+O `rasterio`, que a §18.2 de `docs/Khnumn.md` escolhe para a ortoimagem de
+§13.5 e para a publicação dos rasters de §13.6, é o primeiro caso. O wheel
+embute o **GDAL**, que é MIT, e o GDAL embute por sua vez o PROJ, o GEOS, o
+libpng, o libtiff, o SQLite e outros. A licença do GDAL é MIT, e o inventário
+do `rasterio` no PyPI declara-a, mas **o `rasterio` declara a sua, e a do GDAL
+vem dentro do wheel**.
+
+A regra que daí resulta, e que passa a valer a partir da integração do
+`rasterio`:
+
+> **A auditoria tem de cobrir a árvore transitiva do wheel, e não apenas o
+> requisito declarado.** Uma dependência que embute uma biblioteca nativa
+> obriga a inventariar o que é transportado, do mesmo modo que o §2.3 já
+> inventaria o que o wheel do `pycolmap` embute. A verificação por inspecção do
+> binário distribuído, e não por convenção, é o que confirma a política, e essa
+> inspecção é feita sobre cada versão integrada, e não uma vez.
+
+Enquanto essa verificação não estiver feita, o `rasterio` fica na §2.2 de
+`THIRD-PARTY.md` — aprovado e ainda não integrado — e não na §2.1, que é a
+secção do que está efectivamente no produto. A regra de §4.3 de
+`THIRD-PARTY.md` não se contorna por ser um wheel: ela diz que a licença de
+uma dependência transitiva pode diferir da licença da biblioteca que a invoca,
+e que a auditoria é feita sobre a árvore de dependências compilada.
+
 ## 3. Matriz de motores: alterações
 
 As alterações à matriz de `processos/decisoes-motores.md` §2, com a causa de
@@ -141,6 +173,9 @@ cada uma:
 | DTM e filtragem de solo | PDAL | **Implementação própria, sobre Open3D** | O PDAL não tem wheel e não há `conda` no ambiente (§2.4) |
 | Nuvens de pontos, registo | PDAL e Open3D | **Open3D** | Mesma causa |
 | Ortoimagem | GDAL ou Rasterio | **`rasterio` (BSD-3-Clause)**, que embute o GDAL | Wheel disponível, sem instalação de sistema; decisão a confirmar em `F4.E7` |
+| Rasterização de superfície | Open3D e CloudCompare, para visualização | **Implementação própria em Rust, no núcleo** | As duas primeiras têm interface gráfica e a segunda é copyleft forte; um motor de GPU violaria o princípio CPU-first. Registo em ADR-012 |
+| Escrita de rasters geoespaciais | GDAL de sistema | **`rasterio`**, também para a publicação dos rasters de §13.6 | Mesma causa da linha da ortoimagem; a árvore transitiva do wheel tem de ser auditada (§2.5) |
+| TIFF intermédio | — | **crate `tiff`, em Rust, sem features de compressão** | Para zero dependências transitivas; a compressão final é a do COG. Registo em ADR-013 |
 
 ## 4. Regras que passam a valer
 
@@ -149,6 +184,7 @@ cada uma:
 | Nenhuma dependência de sistema no caminho de código | Este registo, §1 |
 | Toda a dependência tem versão fixa e hash: `requirements.lock` e `Cargo.lock` versionados | `.gitignore`, `docs/Khnumn.md` §20 |
 | A auditoria de licenças corre **por build**, e o resultado é versionado em `processos/sbom.json` | `THIRD-PARTY.md` §4.3 |
+| A auditoria cobre a **árvore transitiva do wheel**, e não só o requisito declarado | Este registo, §2.5 |
 | Uma dependência com licença desconhecida é tratada como desconhecida, e não como permissiva | `THIRD-PARTY.md` §4.4 |
 | A data de verificação é obrigatória em cada linha da shortlist | `THIRD-PARTY.md` §4.4 |
 | A componente copyleft exige aviso no primeiro uso, e o aviso é reproduzível a partir da configuração | `THIRD-PARTY.md` §4.5 |
@@ -168,11 +204,12 @@ versão de dependência tem de ser lida, e não apenas gerada.
 
 | Item | Valor |
 |---|---|
-| Decisão | Somente wheels e crates permissivos; leitura de metadados própria; `PDAL` fora do caminho de código |
-| Data | 2026-10-21 |
-| Etapa | `F0.E7` de `docs/ROADMAP.md` |
-| Referência | `docs/Khnumn.md` §27.2 item 5, §18.2; `THIRD-PARTY.md` §4; ADR-001, ADR-002, ADR-003, ADR-010 |
+| Decisão | Somente wheels e crates permissivos; leitura de metadados própria; `PDAL` fora do caminho de código; a árvore transitiva dos wheels é auditada, e não só o requisito declarado |
+| Data | 2026-10-21; revisto em 2026-10-22 |
+| Etapa | `F0.E7` de `docs/ROADMAP.md`; revisão em `F9.E2` e `F9.E3` |
+| Referência | `docs/Khnumn.md` §27.2 item 5, §18.2, §13.6; `THIRD-PARTY.md` §4; ADR-001, ADR-002, ADR-003, ADR-010, ADR-012, ADR-013 |
 | Resultado da auditoria | Núcleo livre de copyleft forte, verificado sobre a árvore compilada |
+| Revisão de 2026-10-22 | Acrescentada a regra de auditoria da árvore transitiva do wheel, com o `rasterio` como primeiro caso (§2.5) |
 | Efeito no roadmap | Nenhum na ordem; altera a matriz de motores de `processos/decisoes-motores.md` §2 |
 
 ---

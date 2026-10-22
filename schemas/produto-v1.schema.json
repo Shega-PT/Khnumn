@@ -2,15 +2,17 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://khnumn.org/esquemas/produto-v1.schema.json",
   "title": "Produto com proveniencia",
-  "description": "Ficheiro derivado, com o sistema de coordenadas, a resolucao, a incerteza e a proveniencia. A incerteza e um dado de primeira classe: um produto sem estimativa tem de declarar essa ausencia, e nao omitir o campo.",
+  "description": "Ficheiro derivado, com o formato, o sistema de coordenadas, a resolucao, a incerteza e a proveniencia. A incerteza e um dado de primeira classe: um produto sem estimativa tem de declarar essa ausencia, e nao omitir o campo. O mesmo se aplica ao sistema de coordenadas: um produto que nao tem CRS declara a ausencia, e nao a preenche com um valor que o situaria.",
   "type": "object",
   "required": [
     "schema_version",
     "product_id",
     "type",
+    "format",
     "source_uri",
     "sha256",
     "crs",
+    "crs_declaration",
     "units",
     "resolution",
     "data_kind",
@@ -18,6 +20,37 @@
     "provenance"
   ],
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "required": ["crs"],
+        "properties": { "crs": { "type": "null" } }
+      },
+      "then": {
+        "properties": {
+          "crs_declaration": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["uncertainty"],
+        "properties": {
+          "uncertainty": {
+            "required": ["estimated"],
+            "properties": { "estimated": { "const": false } }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "uncertainty": {
+            "properties": { "declaration": { "type": "string", "minLength": 1 } }
+          }
+        }
+      }
+    }
+  ],
   "properties": {
     "schema_version": { "const": "1.0.0" },
     "product_id": { "type": "string", "minLength": 1 },
@@ -34,12 +67,28 @@
         "ortomosaico",
         "poses",
         "relatorio",
-        "mapa_incerteza"
+        "mapa_cobertura",
+        "mapa_densidade",
+        "mapa_residuos",
+        "mapa_incerteza",
+        "vista"
       ]
+    },
+    "format": {
+      "type": "string",
+      "enum": ["tiff", "cog", "ply", "las", "laz", "json", "csv", "png"],
+      "description": "Formato do ficheiro em disco. Um raster e o seu formato sao coisas distintas: um TIFF intermédio e o COG publicado sao dois produtos com uma linhagem, conforme ADR-013."
     },
     "source_uri": { "type": "string", "minLength": 1 },
     "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-    "crs": { "type": "string", "minLength": 1 },
+    "crs": {
+      "type": ["string", "null"],
+      "description": "Sistema de coordenadas do produto. Nulo quando o produto nao tem CRS, como um raster em grelha de camara. A ausencia e declarada em `crs_declaration`."
+    },
+    "crs_declaration": {
+      "type": ["string", "null"],
+      "description": "Explicacao da ausencia de CRS, quando nao ha. Preenchida mesmo quando `crs` existe, para dizer porque e aquele."
+    },
     "units": {
       "type": "object",
       "required": ["horizontal", "vertical"],
@@ -57,6 +106,29 @@
         "horizontal": { "type": "number", "exclusiveMinimum": 0 },
         "vertical": { "type": "number", "exclusiveMinimum": 0 },
         "unit": { "type": "string", "minLength": 1 }
+      }
+    },
+    "campo": {
+      "type": "string",
+      "enum": ["cobertura", "densidade", "residuo_px", "incerteza_h", "desvio_lod"],
+      "description": "Nome do campo escalar que um mapa transporta, quando o produto e um mapa. A sua unidade e a sua legenda estao em `legenda` e em `units`."
+    },
+    "legenda": {
+      "type": "array",
+      "description": "Legenda numerica de um mapa: a rampa que translate o valor do campo em cor, com as unidades. Sem legenda, um mapa nao e interpretavel por maquina.",
+      "items": {
+        "type": "object",
+        "required": ["valor", "cor", "rotulo"],
+        "additionalProperties": false,
+        "properties": {
+          "valor": { "type": "number" },
+          "cor": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{6}$",
+            "description": "Cor em hexadecimal, sem alfa."
+          },
+          "rotulo": { "type": "string", "minLength": 1 }
+        }
       }
     },
     "data_kind": {

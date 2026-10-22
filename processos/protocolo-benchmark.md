@@ -43,11 +43,14 @@ Cada execução responde a uma pergunta declarada, com uma variável alterada de
 | Pré-processamento explícito | Qualquer filtragem, reamostragem, pirâmide ou conversão é declarada e igualada entre comparações |
 | Parâmetros comparáveis | Os parâmetros que diferem são o objeto da comparação; os restantes são declarados como fixos |
 | Nada de capturas de ecrã | A comparação é feita sobre métricas, com unidades e número de amostras |
+| Rasterizações comparáveis | As mesmas câmaras, o mesmo modelo de câmara, a mesma resolução de saída e a mesma semente; a comparação é feita sobre os campos numéricos, nunca sobre as imagens |
 | Repetibilidade | Cada execução é repetida um número declarado de vezes, e a dispersão é reportada |
 
 ### 1.3 O que este protocolo não faz
 
 Não avalia a qualidade subjectiva de uma ortoimagem, nem a aparência de uma malha, nem a plausibilidade visual de uma nuvem. Essas intuições são úteis para detectar problemas, mas não são métricas. Quando uma inspeção visual sugere um problema, a execução tem de ser instrumentada para o confirmar ou o refutar.
+
+Uma rasterização tem o mesmo estatuto. É um instrumento de diagnóstico: o que entra num relatório são os campos quantificados, e a imagem nunca é um critério de aceitação. Um produto de rasterização nunca é, por si só, um portão de aceitação; é o instrumento para apurar uma das métricas de §15.1 de `docs/Khnumn.md`, e a aceitação continua a ser decidida pelas tolerâncias de §15.5 e pelos pontos de verificação independentes.
 
 ---
 

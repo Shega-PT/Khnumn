@@ -2,9 +2,9 @@
 
 **Âmbito:** este documento fixa a **ordem de execução** da implementação do Khnumn. Não contém datas, nem durações, nem estimativas de esforço. A ordem é determinada por dependências técnicas, e cada etapa declara as suas.
 
-**Estado do projeto:** em desenvolvimento. A Fase 0 está fechada e a Fase 2 está concluída: existe um núcleo executável, com ingestão e inventário por hash, leitura de metadados, quality gate, grafo de tarefas com cache por hash, e reconstrução esparsa pelo motor de SfM com o gauge declarado. O estado de cada etapa está em §4, e o registo de progresso em §7.
+**Estado do projeto:** em desenvolvimento. A Fase 0 está fechada e a Fase 2 está concluída: existe um núcleo executável, com ingestão e inventário por hash, leitura de metadados, quality gate, grafo de tarefas com cache por hash, e reconstrução esparsa pelo motor de SfM com o gauge declarado. A Fase 9 está criada e as suas etapas são executáveis a partir da Fase 2, mas ainda não foram iniciadas. O estado de cada etapa está em §4, e o registo de progresso em §7.
 
-**Versão do roadmap:** 0.1.0 · **Data:** 2026-10-20 · **Idioma:** Português europeu
+**Versão do roadmap:** 0.1.0 · **Data:** 2026-10-22 · **Idioma:** Português europeu
 
 ---
 
@@ -76,7 +76,9 @@ Uma dependência é uma relação técnica, não de conveniência. "Preciso do r
 
 ## 3. Ordem de execução canónica
 
-A lista plana e numerada de todas as etapas, pela ordem em que devem ser executadas. Nenhuma etapa da lista pode começar antes de as suas dependências estarem `implementado`.
+A lista plana e numerada de todas as etapas, pela ordem em que devem ser executadas. Nenhuma etapa da lista pode começar antes de as suas dependências estarem implementado.
+
+**Sobre a numeração das fases.** A numeração é histórica: a Fase 9 foi criada depois da Fase 8, e o seu número não reflecte a ordem de execução. A lista abaixo está ordenada por dependência, e é por isso que as etapas da Fase 9 ocupam as posições 25 a 28. A §4 apresenta as fases por número, e cada fase declara as suas etapas.
 
 | # | Etapa | Título | Depende de |
 |---|---|---|---|
@@ -104,53 +106,61 @@ A lista plana e numerada de todas as etapas, pela ordem em que devem ser executa
 | 22 | `F2.E4` | Diagnóstico do modelo | `F2.E3` |
 | 23 | `F2.E5` | Exportação de poses e nuvem esparsa | `F2.E3` |
 | 24 | `F2.E6` | Testes com imagens de referência | `F2.E4`, `F0.E8` |
-| 25 | `F3.E1` | Detecção de marcas: projeção inicial e refinamento | `F2.E5` |
-| 26 | `F3.E2` | Filtro de consistência multivista | `F3.E1` |
-| 27 | `F3.E3` | Revisão humana das deteções | `F3.E2` |
-| 28 | `F3.E4` | Verificação de acquisibilidade do controlo | `F3.E1` |
-| 29 | `F3.E5` | Ingestão de pontos de controlo com covariância | `F1.E1`, `F0.E4` |
-| 30 | `F3.E6` | Similaridade de 7 parâmetros ponderada | `F3.E5`, `F2.E5` |
-| 31 | `F3.E7` | Ajuste constrangido com pontos constantes | `F3.E6`, `F2.E3` |
-| 32 | `F3.E8` | Propagação da incerteza por ensemble | `F3.E7` |
-| 33 | `F3.E9` | Priors de pose GNSS | `F2.E1` |
-| 34 | `F3.E10` | Ingestão e exclusão de checkpoints | `F3.E5`, `F0.E4` |
-| 35 | `F3.E11` | Métricas de exatidão e estado de aceitação | `F3.E7`, `F3.E10` |
-| 36 | `F3.E12` | Relatório de incerteza com decomposição | `F3.E8`, `F3.E11` |
-| 37 | `F4.E1` | Adaptador do motor de MVS externo | `F2.E1`, `F0.E7` |
-| 38 | `F4.E2` | Via de superfície esparsa e permissiva | `F2.E5` |
-| 39 | `F4.E3` | Via de superfície densa em acelerador | `F2.E1` |
-| 40 | `F4.E4` | Fusão de nuvens e filtragem | `F4.E3` |
-| 41 | `F4.E5` | Processamento por blocos e controlo de RAM | `F4.E3` |
-| 42 | `F4.E6` | Malha e texturização | `F4.E4` |
-| 43 | `F4.E7` | Ortoimagem e ortorretificação | `F4.E2`, `F3.E11` |
-| 44 | `F4.E8` | DTM e filtragem de solo | `F4.E4` |
-| 45 | `F4.E9` | Refinamento iterativo da via densa em CPU | `F4.E1`, `F4.E3` |
-| 46 | `F4.E10` | Validação contra a referência de acelerador | `F4.E9`, `F4.E3` |
-| 47 | `F5.E1` | Classificador de cenário | `F1.E7` |
-| 48 | `F5.E2` | Confiança e razões explicáveis | `F5.E1` |
-| 49 | `F5.E3` | Correcção manual e registo | `F5.E2` |
-| 50 | `F5.E4` | Planeador de pipeline com fallback | `F5.E3`, `F2.E1` |
-| 51 | `F5.E5` | Escolha do caminho de superfície e orçamento | `F5.E4`, `F3.E8`, `F4.E2`, `F4.E3` |
-| 52 | `F5.E6` | Função multiobjetivo e registo de decisões | `F5.E5` |
-| 53 | `F6.E1` | Referência temporal e reconciliação de relógios | `F1.E6` |
-| 54 | `F6.E2` | Extracção adaptativa de fotogramas | `F1.E4`, `F6.E1` |
-| 55 | `F6.E3` | Convenção de instante de captura | `F6.E1` |
-| 56 | `F6.E4` | Modelação de rolling shutter | `F6.E3`, `F2.E3` |
-| 57 | `F6.E5` | Adaptador LiDAR e calibração entre sensores | `F1.E1`, `F2.E1` |
-| 58 | `F6.E6` | Cor e calibração radiométrica | `F1.E6` |
-| 59 | `F6.E7` | Adaptador de satélite | `F1.E6`, `F2.E1` |
-| 60 | `F6.E8` | GNSS/IMU e sincronização | `F6.E1`, `F3.E9` |
-| 61 | `F7.E1` | Persistência do DAG e recuperação | `F1.E9` |
-| 62 | `F7.E2` | Scheduler CPU-first com backpressure | `F7.E1` |
-| 63 | `F7.E3` | Workers remotos com capacidade anunciada | `F7.E2` |
-| 64 | `F7.E4` | Retry, checkpoints e cache | `F7.E2` |
-| 65 | `F7.E5` | Consistência numérica e tolerâncias | `F7.E2` |
-| 66 | `F7.E6` | Autenticação e proteção do transporte | `F7.E3` |
-| 67 | `F8.E1` | Representação de evidência por célula | `F3.E12` |
-| 68 | `F8.E2` | Alinhamento de fontes | `F8.E1`, `F3.E7` |
-| 69 | `F8.E3` | Compatibilidade temporal | `F8.E1` |
-| 70 | `F8.E4` | Regra de decisão sobre evidência | `F8.E2`, `F8.E3` |
-| 71 | `F8.E5` | Benchmarks contra baselines | `F8.E4` |
+| 25 | `F9.E1` | Registo de produtos no catálogo e revisão do esquema de produto | `F1.E1` |
+| 26 | `F9.E2` | Rasterizador de software e modelo de câmara | `F2.E5` |
+| 27 | `F9.E3` | Publicação de rasters geoespaciais em COG | `F9.E1`, `F9.E2` |
+| 28 | `F9.E4` | Renderização multivista determinística | `F9.E2` |
+| 29 | `F3.E1` | Detecção de marcas: projeção inicial e refinamento | `F2.E5` |
+| 30 | `F3.E2` | Filtro de consistência multivista | `F3.E1` |
+| 31 | `F3.E3` | Revisão humana das deteções | `F3.E2` |
+| 32 | `F3.E4` | Verificação de acquisibilidade do controlo | `F3.E1` |
+| 33 | `F3.E5` | Ingestão de pontos de controlo com covariância | `F1.E1`, `F0.E4` |
+| 34 | `F3.E6` | Similaridade de 7 parâmetros ponderada | `F3.E5`, `F2.E5` |
+| 35 | `F3.E7` | Ajuste constrangido com pontos constantes | `F3.E6`, `F2.E3` |
+| 36 | `F3.E8` | Propagação da incerteza por ensemble | `F3.E7` |
+| 37 | `F3.E9` | Priors de pose GNSS | `F2.E1` |
+| 38 | `F3.E10` | Ingestão e exclusão de checkpoints | `F3.E5`, `F0.E4` |
+| 39 | `F3.E11` | Métricas de exatidão e estado de aceitação | `F3.E7`, `F3.E10` |
+| 40 | `F3.E12` | Relatório de incerteza com decomposição | `F3.E8`, `F3.E11` |
+| 41 | `F3.E13` | Campo de resíduos de reprojecção por câmara | `F9.E2`, `F3.E11` |
+| 42 | `F4.E1` | Adaptador do motor de MVS externo | `F2.E1`, `F0.E7` |
+| 43 | `F4.E2` | Via de superfície esparsa e permissiva | `F2.E5` |
+| 44 | `F4.E3` | Via de superfície densa em acelerador | `F2.E1` |
+| 45 | `F4.E4` | Fusão de nuvens e filtragem | `F4.E3` |
+| 46 | `F4.E5` | Processamento por blocos e controlo de RAM | `F4.E3` |
+| 47 | `F4.E6` | Malha e texturização | `F4.E4` |
+| 48 | `F4.E7` | Ortoimagem e ortorretificação | `F4.E2`, `F3.E11` |
+| 49 | `F4.E8` | DTM e filtragem de solo | `F4.E4` |
+| 50 | `F4.E9` | Refinamento iterativo da via densa em CPU | `F4.E1`, `F4.E3` |
+| 51 | `F4.E10` | Validação contra a referência de acelerador | `F4.E9`, `F4.E3` |
+| 52 | `F4.E11` | Mapa de cobertura e contagem de furos | `F4.E2`, `F9.E3` |
+| 53 | `F4.E12` | Mapa de incerteza com legenda | `F3.E12`, `F4.E11` |
+| 54 | `F5.E1` | Classificador de cenário | `F1.E7` |
+| 55 | `F5.E2` | Confiança e razões explicáveis | `F5.E1` |
+| 56 | `F5.E3` | Correcção manual e registo | `F5.E2` |
+| 57 | `F5.E4` | Planeador de pipeline com fallback | `F5.E3`, `F2.E1` |
+| 58 | `F5.E5` | Escolha do caminho de superfície e orçamento | `F5.E4`, `F3.E8`, `F4.E2`, `F4.E3` |
+| 59 | `F5.E6` | Função multiobjetivo e registo de decisões | `F5.E5` |
+| 60 | `F6.E1` | Referência temporal e reconciliação de relógios | `F1.E6` |
+| 61 | `F6.E2` | Extracção adaptativa de fotogramas | `F1.E4`, `F6.E1` |
+| 62 | `F6.E3` | Convenção de instante de captura | `F6.E1` |
+| 63 | `F6.E4` | Modelação de rolling shutter | `F6.E3`, `F2.E3` |
+| 64 | `F6.E5` | Adaptador LiDAR e calibração entre sensores | `F1.E1`, `F2.E1` |
+| 65 | `F6.E6` | Cor e calibração radiométrica | `F1.E6` |
+| 66 | `F6.E7` | Adaptador de satélite | `F1.E6`, `F2.E1` |
+| 67 | `F6.E8` | GNSS/IMU e sincronização | `F6.E1`, `F3.E9` |
+| 68 | `F7.E1` | Persistência do DAG e recuperação | `F1.E9` |
+| 69 | `F7.E2` | Scheduler CPU-first com backpressure | `F7.E1` |
+| 70 | `F7.E3` | Workers remotos com capacidade anunciada | `F7.E2` |
+| 71 | `F7.E4` | Retry, checkpoints e cache | `F7.E2` |
+| 72 | `F7.E5` | Consistência numérica e tolerâncias | `F7.E2` |
+| 73 | `F7.E6` | Autenticação e proteção do transporte | `F7.E3` |
+| 74 | `F8.E1` | Representação de evidência por célula | `F3.E12` |
+| 75 | `F8.E2` | Alinhamento de fontes | `F8.E1`, `F3.E7` |
+| 76 | `F8.E3` | Compatibilidade temporal | `F8.E1` |
+| 77 | `F8.E4` | Regra de decisão sobre evidência | `F8.E2`, `F8.E3` |
+| 78 | `F8.E5` | Benchmarks contra baselines | `F8.E4` |
+| 79 | `F8.E6` | Verificação multivista por acumulação de profundidade | `F8.E1`, `F9.E4` |
 
 ---
 
@@ -214,6 +224,7 @@ A fase mais densa do roadmap, e a que decide se o sistema pode fazer afirmaçõe
 | `F3.E10` | Ingestão e exclusão de checkpoints | `F3.E5`, `F0.E4` | planeado | Pontos de verificação lidos apenas pelo validador, depois do modelo congelado; a exclusão é imposta pelo carregamento e não por convenção | `docs/Khnumn.md` §15.2, `processos/protocolo-benchmark.md` §4.1 |
 | `F3.E11` | Métricas de exatidão e estado de aceitação | `F3.E7`, `F3.E10` | planeado | RMSE horizontal, vertical e tridimensional, erro médio, percentis e regra do *blunder* calculados; estado emitido com a causa | `docs/Khnumn.md` §15.1, §15.4, §15.5 |
 | `F3.E12` | Relatório de incerteza com decomposição | `F3.E8`, `F3.E11` | planeado | Incerteza total decomposta nas parcelas de controlo e de cena, com a fração de controlo declarada | `docs/Khnumn.md` §15.3, `processos/protocolo-benchmark.md` §4.7 |
+| `F3.E13` | Campo de resíduos de reprojecção por câmara | `F9.E2`, `F3.E11` | planeado | Raster de resíduos por câmara, com a classe "sem observação" explícita; métricas média, p95 e máximo por câmara; o resíduo apurado é a mesma grandeza que o motor de SfM reporta | `docs/Khnumn.md` §13.6, §15.1, §11.4 |
 ### Fase 4 — Reconstrução densa e produtos 3D
 
 | ID | Etapa | Depende de | Estado | Critério de aceitação | Referência |
@@ -223,11 +234,13 @@ A fase mais densa do roadmap, e a que decide se o sistema pode fazer afirmaçõe
 | `F4.E3` | Via de superfície densa em acelerador | `F2.E1` | planeado | Mapas de profundidade e fusão executados no motor de referência, com a consistência geométrica multivista activa | `docs/Khnumn.md` §13.1 |
 | `F4.E4` | Fusão de nuvens e filtragem | `F4.E3` | planeado | Nuvem densa filtrada por consistência entre vistas, ângulo de observação, textura, oclusão e incerteza | `docs/Khnumn.md` §13.1 |
 | `F4.E5` | Processamento por blocos e controlo de RAM | `F4.E3` | planeado | Processamento por blocos com margem de contexto e fusão de fronteiras determinística, dentro do orçamento de memória declarado | `docs/Khnumn.md` §16.1, §16.3 |
-| `F4.E6` | Malha e texturização | `F4.E4` | planeado | Malha e textura geradas com unidades, orientação, escala e origem preservadas; a simplificação declara se alterou medidas | `docs/Khnumn.md` §13.4 |
+| `F4.E6` | Malha e texturização | `F4.E4` | planeado | Malha e textura geradas com unidades, orientação, escala e origem preservadas; a simplificação declara o **desvio geométrico medido** que introduz, em metros, contra a malha de resolução integral, e não apenas que não alterou medidas | `docs/Khnumn.md` §13.4, §13.6, §15.1 |
 | `F4.E7` | Ortoimagem e ortorretificação | `F4.E2`, `F3.E11` | planeado | Ortoimagem produzida com o modelo de superfície, o CRS de destino e o método de reamostragem registados; descontinuidade de costura verificada | `docs/Khnumn.md` §13.5, §15.5 |
 | `F4.E8` | DTM e filtragem de solo | `F4.E4` | planeado | Classificação de solo executada como etapa autónoma, com as zonas medidas, interpoladas e desconhecidas distinguidas | `docs/Khnumn.md` §13.3 |
 | `F4.E9` | Refinamento iterativo da via densa em CPU | `F4.E1`, `F4.E3` | planeado | Ciclo com priori da iteração anterior, paragem por autoconvergência, orçamento declarado e retenção da melhor iteração | `docs/Khnumn.md` §13.1, `processos/decisoes-motores.md` ADR-009 |
 | `F4.E10` | Validação contra a referência de acelerador | `F4.E9`, `F4.E3` | planeado | Densidade, completude, distância ponto-superfície e taxa de outliers comparadas por sub-região com a referência, dentro dos limiares declarados | `processos/protocolo-benchmark.md` §6.1 |
+| `F4.E11` | Mapa de cobertura e contagem de furos | `F4.E2`, `F9.E3` | planeado | Raster em COG com CRS, `nodata` e legenda; `cobertura_percent`, `furos_contagem` e `furos_area_m2` declarados; a área sem observação nunca é apresentada como valor | `docs/Khnumn.md` §13.6, §15.1, §22 Fase 4 |
+| `F4.E12` | Mapa de incerteza com legenda | `F3.E12`, `F4.E11` | planeado | Raster de incerteza com legenda numérica e unidades; a decomposição entre parcela de controlo e parcela de cena é distinguível no produto | `docs/Khnumn.md` §15.3, §13.6 |
 ### Fase 5 — Planeador e deteção de cenário
 
 | ID | Etapa | Depende de | Estado | Critério de aceitação | Referência |
@@ -269,6 +282,17 @@ A fase mais densa do roadmap, e a que decide se o sistema pode fazer afirmaçõe
 | `F8.E3` | Compatibilidade temporal | `F8.E1` | planeado | Janela de compatibilidade calculada ou recebida, e mudanças prováveis marcadas sem fusão silenciosa | `docs/Khnumn.md` §14.2 |
 | `F8.E4` | Regra de decisão sobre evidência | `F8.E2`, `F8.E3` | planeado | Regras explícitas de aceitação, rejeição e múltiplas hipóteses, testadas contra conjuntos de referência | `docs/Khnumn.md` §14.4 |
 | `F8.E5` | Benchmarks contra baselines | `F8.E4` | planeado | Comparação com baselines estabelecidos em conjuntos públicos e próprios, com o critério de inovação própria aplicado | `docs/Khnumn.md` §21.3, §27.2 |
+| `F8.E6` | Verificação multivista por acumulação de profundidade | `F8.E1`, `F9.E4` | planeado | `inconsistencia_multivista_m` por sub-região, com o número de vistas observadoras declarado, comparada com a referência de varrimento laser, dentro dos limiares declarados | `docs/Khnumn.md` §15.1, §14.4, §13.6 |
+### Fase 9 — Rasterização de superfície e registo de produtos
+
+A fase que faz do esquema de produto um registo consultável, e que dá ao sistema o instrumento de rasterização de §13.6 de `docs/Khnumn.md`. Foi criada depois da Fase 8, e por isso tem o número mais alto, mas as suas etapas são executáveis a partir da Fase 2: dependem de poses e de câmaras, e não de densidade.
+
+| ID | Etapa | Depende de | Estado | Critério de aceitação | Referência |
+|---|---|---|---|---|---|
+| `F9.E1` | Registo de produtos no catálogo e revisão do esquema de produto | `F1.E1` | planeado | O esquema de produto é aplicado a produtos reais e não só embebido; o catálogo recebe o primeiro registo de produto e a tabela de produtos deixa de ser código morto; as consultas por produto devolvem o registo e a sua proveniência; o formato em disco, o nome do campo escalar de um mapa, a legenda numérica e a declaração de ausência de CRS ficam no contrato | `docs/Khnumn.md` §7.3, §19.2, `docs/modelo-metadados.md` §2.2 |
+| `F9.E2` | Rasterizador de software e modelo de câmara | `F2.E5` | planeado | A projecção coincide com a do motor de SfM, para todos os modelos de câmara que o motor usa, verificada contra a projecção do próprio motor; o corte no plano near está correcto; a classe "sem dados" é explícita; a mesma entrada produz sempre o mesmo raster, com o mesmo hash; casos de teste analíticos e de ida-e-volta | `docs/Khnumn.md` §13.6, §10.1, §6.1, `processos/decisoes-motores.md` ADR-012 |
+| `F9.E3` | Publicação de rasters geoespaciais em COG | `F9.E1`, `F9.E2` | planeado | O raster publicado tem CRS, `nodata`, overviews e compressão; o intermédio tem hash e é produto intermédio; a linhagem entre o intermédio e o publicado consta do registo de proveniência | `docs/Khnumn.md` §13.6, §19.2, `processos/decisoes-motores.md` ADR-013 |
+| `F9.E4` | Renderização multivista determinística | `F9.E2` | planeado | A sequência de frames é reproduzível por hash e entra no grafo como tarefa com versão e parâmetros; o visor opcional apresenta frames idênticos aos do caminho headless, e a igualdade é verificada sem ecrã | `docs/Khnumn.md` §13.6, §19.1 |
 ---
 
 ## 5. Temas transversais
@@ -285,6 +309,7 @@ Estes temas atravessam todas as fases. Não são etapas, porque não têm um mom
 | **Segurança e integridade** | Fases 1 e 7. Validação de entradas externas, sanitização de caminhos, permissões mínimas e inventário de licenças | `docs/Khnumn.md` §20 |
 | **Testabilidade** | Todas as fases. Cada etapa tem critério de aceitação verificável no ambiente de referência | `processos/protocolo-benchmark.md` §1.2 |
 | **Observabilidade** | Fases 1 e 7. Logs estruturados, estado e progresso por tarefa, e métricas por etapa | `docs/Khnumn.md` §17.2 |
+| **Rasterização como instrumento de validação** | Fases 2, 3, 4 e 8, e iniciada na Fase 9. A rasterização não produz geometria: produz campos quantificados que a validação consome. Nenhum resultado de rasterização é um portão de aceitação por si só | `docs/Khnumn.md` §13.6, §15.1 |
 | **Honestidade do estado** | Todas as fases. `NOT_VALIDATED` é um estado legítimo e preferível a um `PASS` injustificado | `docs/Khnumn.md` §15.4, §27.2 |
 
 ---
@@ -301,7 +326,7 @@ Itens que ficam **fora** do roadmap nesta fase, com o motivo. A listagem é expl
 | **SLAM/VIO integrado** | Útil para a trajetória em tempo real, mas não é reconstrução global. A distinção está conceptualmente resolvida; a integração não | `docs/Khnumn.md` §12 |
 | **Motor de MVS próprio em PyTorch** | A completude medida é da ordem de quarenta vezes inferior à da via aceleradora, e é implementação própria contra o princípio de reutilizar. Fica como alternativa a reavaliar se o motor externo não for aceitável | `processos/decisoes-motores.md` §6.1 |
 | **Camada de ajuste própria com prior ponderado** | Escalada de `ADR-007`. Só se justifica se uma medição comparativa mostrar que o ensemble é instável ou demasiado caro | `processos/decisoes-motores.md` ADR-007 |
-| **3D Tiles e I3S** | Formatos de visualização e distribuição. O núcleo não tem dependência de um formato de exibição | `docs/Khnumn.md` §19.2 |
+| **3D Tiles e I3S** | Formatos de visualização e distribuição. O núcleo não tem dependência de um formato de exibição. A rasterização de §13.6 não altera isto: o rasterizador projecta a malha directamente sobre a grelha, sem formato de intercâmbio pelo meio, e por isso o glTF/GLB e os 3D Tiles não são necessários para a visualização interna. São adiados para a distribuição, se e quando a houver | `docs/Khnumn.md` §19.2, §13.6 |
 | **Multi-sessão e incremento de grandes coleções** | A fase 7 trata a distribuição de uma coleção, não o crescimento incremental de um modelo ao longo de campanhas sucessivas | `docs/Khnumn.md` §17.1 |
 | **Mosaicos de grandes áreas com reprocessamento** | A composição de mosaicos existe, mas a gestão de sobreposições entre mosaicos de campanhas distintas não está especificada | `docs/Khnumn.md` §13.5 |
 | **Contribuição de fluxo de pontos de controlo ao motor de referência** | O mecanismo existe e é usado, mas a manutenção de uma bifurcação do motor seria um custo permanente sem retorno imediato | `processos/decisoes-motores.md` §6.2 |
