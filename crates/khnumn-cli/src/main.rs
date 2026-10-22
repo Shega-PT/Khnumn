@@ -316,7 +316,8 @@ fn configuracao_por_omissao(id: &str) -> Value {
             "sparse_reconstruction": true,
             "dense_reconstruction": false,
             "build_mesh": false,
-            "build_orthoimage": false
+            "build_orthoimage": false,
+            "build_diagnostic_maps": false
         },
         "reproducibility": {
             "record_software_versions": true,

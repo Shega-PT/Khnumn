@@ -281,4 +281,155 @@ mod testes {
             outro => panic!("erro inesperado: {outro}"),
         }
     }
+
+    #[test]
+    fn o_esquema_de_produto_valida_um_produto_completo() {
+        let registo = RegistoEsquemas::embutido().unwrap();
+        let produto = json!({
+            "schema_version": "1.0.0",
+            "product_id": "p-1",
+            "type": "mapa_cobertura",
+            "format": "cog",
+            "source_uri": "produtos/c.tif",
+            "sha256": "a".repeat(64),
+            "crs": "EPSG:3763",
+            "crs_declaration": "CRS de destino",
+            "units": {"horizontal": "m", "vertical": "m"},
+            "resolution": {"horizontal": 0.02, "vertical": 0.02, "unit": "m"},
+            "data_kind": "estimado",
+            "uncertainty": {"estimated": false, "declaration": "a cobertura e uma contagem exacta", "value": null, "unit": null, "method": null},
+            "provenance": {"source_uri": null, "operations": [], "versions": {}}
+        });
+        let erros = registo.validar("produto-v1.schema.json", &produto).unwrap();
+        assert!(erros.is_empty(), "erros: {erros:?}");
+    }
+
+    #[test]
+    fn o_esquema_de_produto_aceita_crs_nulo_com_declaracao() {
+        let registo = RegistoEsquemas::embutido().unwrap();
+        let produto = json!({
+            "schema_version": "1.0.0",
+            "product_id": "p-2",
+            "type": "mapa_residuos",
+            "format": "tiff",
+            "source_uri": "produtos/r.tif",
+            "sha256": "b".repeat(64),
+            "crs": null,
+            "crs_declaration": "grelha de camara, sem CRS",
+            "units": {"horizontal": "px", "vertical": "px"},
+            "resolution": {"horizontal": 1.0, "vertical": 1.0, "unit": "px"},
+            "data_kind": "estimado",
+            "uncertainty": {"estimated": false, "declaration": "residuo da projecao", "value": null, "unit": null, "method": null},
+            "provenance": {"source_uri": null, "operations": [], "versions": {}}
+        });
+        let erros = registo.validar("produto-v1.schema.json", &produto).unwrap();
+        assert!(erros.is_empty(), "erros: {erros:?}");
+    }
+
+    #[test]
+    fn o_esquema_de_produto_rejeita_crs_nulo_sem_declaracao() {
+        let registo = RegistoEsquemas::embutido().unwrap();
+        let produto = json!({
+            "schema_version": "1.0.0",
+            "product_id": "p-3",
+            "type": "mapa_residuos",
+            "format": "tiff",
+            "source_uri": "produtos/r.tif",
+            "sha256": "c".repeat(64),
+            "crs": null,
+            "crs_declaration": null,
+            "units": {"horizontal": "px", "vertical": "px"},
+            "resolution": {"horizontal": 1.0, "vertical": 1.0, "unit": "px"},
+            "data_kind": "estimado",
+            "uncertainty": {"estimated": false, "declaration": "residuo da projecao", "value": null, "unit": null, "method": null},
+            "provenance": {"source_uri": null, "operations": [], "versions": {}}
+        });
+        assert!(registo.validar("produto-v1.schema.json", &produto).is_err());
+    }
+
+    #[test]
+    fn o_esquema_de_produto_rejeita_incerteza_nao_estimada_sem_declaracao() {
+        let registo = RegistoEsquemas::embutido().unwrap();
+        let produto = json!({
+            "schema_version": "1.0.0",
+            "product_id": "p-4",
+            "type": "mapa_cobertura",
+            "format": "cog",
+            "source_uri": "produtos/c.tif",
+            "sha256": "d".repeat(64),
+            "crs": "EPSG:3763",
+            "crs_declaration": "CRS de destino",
+            "units": {"horizontal": "m", "vertical": "m"},
+            "resolution": {"horizontal": 0.02, "vertical": 0.02, "unit": "m"},
+            "data_kind": "estimado",
+            "uncertainty": {"estimated": false, "declaration": null, "value": null, "unit": null, "method": null},
+            "provenance": {"source_uri": null, "operations": [], "versions": {}}
+        });
+        assert!(registo.validar("produto-v1.schema.json", &produto).is_err());
+    }
+
+    #[test]
+    fn o_esquema_de_produto_rejeita_formato_ausente() {
+        let registo = RegistoEsquemas::embutido().unwrap();
+        let produto = json!({
+            "schema_version": "1.0.0",
+            "product_id": "p-5",
+            "type": "poses",
+            "source_uri": "produtos/p.csv",
+            "sha256": "e".repeat(64),
+            "crs": "EPSG:3763",
+            "crs_declaration": "CRS de origem",
+            "units": {"horizontal": "m", "vertical": "m"},
+            "resolution": {"horizontal": 1.0, "vertical": 1.0, "unit": "m"},
+            "data_kind": "estimado",
+            "uncertainty": {"estimated": false, "declaration": "sem estimativa", "value": null, "unit": null, "method": null},
+            "provenance": {"source_uri": null, "operations": [], "versions": {}}
+        });
+        assert!(registo.validar("produto-v1.schema.json", &produto).is_err());
+    }
+
+    #[test]
+    fn o_esquema_de_produto_aceita_um_mapa_com_campo_e_legenda() {
+        let registo = RegistoEsquemas::embutido().unwrap();
+        let produto = json!({
+            "schema_version": "1.0.0",
+            "product_id": "p-6",
+            "type": "mapa_incerteza",
+            "format": "cog",
+            "source_uri": "produtos/u.tif",
+            "sha256": "f".repeat(64),
+            "crs": "EPSG:3763",
+            "crs_declaration": "CRS de destino",
+            "units": {"horizontal": "m", "vertical": "m"},
+            "resolution": {"horizontal": 0.02, "vertical": 0.02, "unit": "m"},
+            "campo": "incerteza_h",
+            "legenda": [{"valor": 0.0, "cor": "000000", "rotulo": "baixa"}, {"valor": 1.0, "cor": "ffffff", "rotulo": "alta"}],
+            "data_kind": "inferido_por_modelo",
+            "uncertainty": {"estimated": true, "declaration": null, "value": 0.3, "unit": "m", "method": "ensemble"},
+            "provenance": {"source_uri": null, "operations": [], "versions": {}}
+        });
+        let erros = registo.validar("produto-v1.schema.json", &produto).unwrap();
+        assert!(erros.is_empty(), "erros: {erros:?}");
+    }
+
+    #[test]
+    fn o_esquema_de_produto_rejeita_tipo_desconhecido() {
+        let registo = RegistoEsquemas::embutido().unwrap();
+        let produto = json!({
+            "schema_version": "1.0.0",
+            "product_id": "p-7",
+            "type": "modelo",
+            "format": "json",
+            "source_uri": "produtos/m.json",
+            "sha256": "7".repeat(64),
+            "crs": "EPSG:3763",
+            "crs_declaration": "CRS de origem",
+            "units": {"horizontal": "m", "vertical": "m"},
+            "resolution": {"horizontal": 1.0, "vertical": 1.0, "unit": "m"},
+            "data_kind": "estimado",
+            "uncertainty": {"estimated": false, "declaration": "sem estimativa", "value": null, "unit": null, "method": null},
+            "provenance": {"source_uri": null, "operations": [], "versions": {}}
+        });
+        assert!(registo.validar("produto-v1.schema.json", &produto).is_err());
+    }
 }

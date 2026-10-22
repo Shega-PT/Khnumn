@@ -212,45 +212,45 @@ A fase mais densa do roadmap, e a que decide se o sistema pode fazer afirmaçõe
 
 | ID | Etapa | Depende de | Estado | Critério de aceitação | Referência |
 |---|---|---|---|---|---|
-| `F3.E1` | Detecção de marcas: projeção inicial e refinamento | `F2.E5` | planeado | Marcas circulares detectadas por refinamento local em sub-píxel, a partir da projeção das coordenadas de terreno; erro medido em píxeis | `docs/Khnumn.md` §5.7, `processos/decisoes-motores.md` ADR-008 |
-| `F3.E2` | Filtro de consistência multivista | `F3.E1` | planeado | Detecções rejeitadas quando inconsistentes com a reprojeção noutra imagem; falsos positivos medidos | `docs/Khnumn.md` §5.7 |
-| `F3.E3` | Revisão humana das deteções | `F3.E2` | planeado | Detecções sobrepostas à imagem e confirmáveis; aceitações e rejeições registadas | `docs/Khnumn.md` §5.7, §2.1 |
-| `F3.E4` | Verificação de acquisibilidade do controlo | `F3.E1` | planeado | Dimensão aparente, contraste, obstrução e número de imagens por marca verificados antes do processamento, com a falha comunicada com a causa | `docs/Khnumn.md` §8.4 |
-| `F3.E5` | Ingestão de pontos de controlo com covariância | `F1.E1`, `F0.E4` | planeado | Covariância 3×3, método, instrumento, data e operador obrigatórios; ausência de covariância tratada como erro de configuração | `docs/Khnumn.md` §7.1, §7.2, §10.4 |
-| `F3.E6` | Similaridade de 7 parâmetros ponderada | `F3.E5`, `F2.E5` | planeado | Transformação estimada com pesos inversos à variância e limiar do estimador robusto escalado pela incerteza | `docs/Khnumn.md` §10.4, `processos/decisoes-motores.md` ADR-007 |
-| `F3.E7` | Ajuste constrangido com pontos constantes | `F3.E6`, `F2.E3` | planeado | Posições de levantamento fixadas como pontos constantes, gauge fixado por três pontos, ajuste executado com os pontos fixos | `docs/Khnumn.md` §10.4, `processos/decisoes-motores.md` ADR-006 |
-| `F3.E8` | Propagação da incerteza por ensemble | `F3.E7` | planeado | Etapa final executada N vezes com perturbação das coordenadas pela covariância; dispersão obtida e número de amostras registado | `docs/Khnumn.md` §10.4, `processos/decisoes-motores.md` ADR-007 |
-| `F3.E9` | Priors de pose GNSS | `F2.E1` | planeado | Priors de posição extraídos dos metadados e aplicados no ajuste, com a covariância declarada e sobreponível | `docs/Khnumn.md` §10.4 |
-| `F3.E10` | Ingestão e exclusão de checkpoints | `F3.E5`, `F0.E4` | planeado | Pontos de verificação lidos apenas pelo validador, depois do modelo congelado; a exclusão é imposta pelo carregamento e não por convenção | `docs/Khnumn.md` §15.2, `processos/protocolo-benchmark.md` §4.1 |
-| `F3.E11` | Métricas de exatidão e estado de aceitação | `F3.E7`, `F3.E10` | planeado | RMSE horizontal, vertical e tridimensional, erro médio, percentis e regra do *blunder* calculados; estado emitido com a causa | `docs/Khnumn.md` §15.1, §15.4, §15.5 |
-| `F3.E12` | Relatório de incerteza com decomposição | `F3.E8`, `F3.E11` | planeado | Incerteza total decomposta nas parcelas de controlo e de cena, com a fração de controlo declarada | `docs/Khnumn.md` §15.3, `processos/protocolo-benchmark.md` §4.7 |
+| `F3.E1` | Detecção de marcas: projeção inicial e refinamento | `F2.E5` | implementado | Marcas circulares detectadas por refinamento local em sub-píxel, a partir da projeção das coordenadas de terreno; erro medido em píxeis | `docs/Khnumn.md` §5.7, `processos/decisoes-motores.md` ADR-008 |
+| `F3.E2` | Filtro de consistência multivista | `F3.E1` | implementado | Detecções rejeitadas quando inconsistentes com a reprojeção noutra imagem; falsos positivos medidos | `docs/Khnumn.md` §5.7 |
+| `F3.E3` | Revisão humana das deteções | `F3.E2` | implementado | Detecções sobrepostas à imagem e confirmáveis; aceitações e rejeições registadas | `docs/Khnumn.md` §5.7, §2.1 |
+| `F3.E4` | Verificação de acquisibilidade do controlo | `F3.E1` | implementado | Dimensão aparente, contraste, obstrução e número de imagens por marca verificados antes do processamento, com a falha comunicada com a causa | `docs/Khnumn.md` §8.4 |
+| `F3.E5` | Ingestão de pontos de controlo com covariância | `F1.E1`, `F0.E4` | implementado | Covariância 3×3, método, instrumento, data e operador obrigatórios; ausência de covariância tratada como erro de configuração | `docs/Khnumn.md` §7.1, §7.2, §10.4 |
+| `F3.E6` | Similaridade de 7 parâmetros ponderada | `F3.E5`, `F2.E5` | implementado | Transformação estimada com pesos inversos à variância e limiar do estimador robusto escalado pela incerteza | `docs/Khnumn.md` §10.4, `processos/decisoes-motores.md` ADR-007 |
+| `F3.E7` | Ajuste constrangido com pontos constantes | `F3.E6`, `F2.E3` | implementado | Posições de levantamento fixadas como pontos constantes, gauge fixado por três pontos, ajuste executado com os pontos fixos | `docs/Khnumn.md` §10.4, `processos/decisoes-motores.md` ADR-006 |
+| `F3.E8` | Propagação da incerteza por ensemble | `F3.E7` | implementado | Etapa final executada N vezes com perturbação das coordenadas pela covariância; dispersão obtida e número de amostras registado | `docs/Khnumn.md` §10.4, `processos/decisoes-motores.md` ADR-007 |
+| `F3.E9` | Priors de pose GNSS | `F2.E1` | implementado | Priors de posição extraídos dos metadados e aplicados no ajuste, com a covariância declarada e sobreponível | `docs/Khnumn.md` §10.4 |
+| `F3.E10` | Ingestão e exclusão de checkpoints | `F3.E5`, `F0.E4` | implementado | Pontos de verificação lidos apenas pelo validador, depois do modelo congelado; a exclusão é imposta pelo carregamento e não por convenção | `docs/Khnumn.md` §15.2, `processos/protocolo-benchmark.md` §4.1 |
+| `F3.E11` | Métricas de exatidão e estado de aceitação | `F3.E7`, `F3.E10` | implementado | RMSE horizontal, vertical e tridimensional, erro médio, percentis e regra do *blunder* calculados; estado emitido com a causa | `docs/Khnumn.md` §15.1, §15.4, §15.5 |
+| `F3.E12` | Relatório de incerteza com decomposição | `F3.E8`, `F3.E11` | implementado | Incerteza total decomposta nas parcelas de controlo e de cena, com a fração de controlo declarada | `docs/Khnumn.md` §15.3, `processos/protocolo-benchmark.md` §4.7 |
 | `F3.E13` | Campo de resíduos de reprojecção por câmara | `F9.E2`, `F3.E11` | planeado | Raster de resíduos por câmara, com a classe "sem observação" explícita; métricas média, p95 e máximo por câmara; o resíduo apurado é a mesma grandeza que o motor de SfM reporta | `docs/Khnumn.md` §13.6, §15.1, §11.4 |
 ### Fase 4 — Reconstrução densa e produtos 3D
 
 | ID | Etapa | Depende de | Estado | Critério de aceitação | Referência |
 |---|---|---|---|---|---|
-| `F4.E1` | Adaptador do motor de MVS externo | `F2.E1`, `F0.E7` | planeado | Processo externo invocado pela interface de adaptador, com aviso de licença no primeiro uso e formatos trocados documentados | `docs/Khnumn.md` §18.3, `processos/decisoes-motores.md` ADR-002 |
-| `F4.E2` | Via de superfície esparsa e permissiva | `F2.E5` | planeado | Triangulação sobre a nuvem esparsa executada, sem dependências com copyleft, e origem declarada no produto | `docs/Khnumn.md` §13.1, `processos/decisoes-motores.md` ADR-005 |
-| `F4.E3` | Via de superfície densa em acelerador | `F2.E1` | planeado | Mapas de profundidade e fusão executados no motor de referência, com a consistência geométrica multivista activa | `docs/Khnumn.md` §13.1 |
-| `F4.E4` | Fusão de nuvens e filtragem | `F4.E3` | planeado | Nuvem densa filtrada por consistência entre vistas, ângulo de observação, textura, oclusão e incerteza | `docs/Khnumn.md` §13.1 |
-| `F4.E5` | Processamento por blocos e controlo de RAM | `F4.E3` | planeado | Processamento por blocos com margem de contexto e fusão de fronteiras determinística, dentro do orçamento de memória declarado | `docs/Khnumn.md` §16.1, §16.3 |
-| `F4.E6` | Malha e texturização | `F4.E4` | planeado | Malha e textura geradas com unidades, orientação, escala e origem preservadas; a simplificação declara o **desvio geométrico medido** que introduz, em metros, contra a malha de resolução integral, e não apenas que não alterou medidas | `docs/Khnumn.md` §13.4, §13.6, §15.1 |
-| `F4.E7` | Ortoimagem e ortorretificação | `F4.E2`, `F3.E11` | planeado | Ortoimagem produzida com o modelo de superfície, o CRS de destino e o método de reamostragem registados; descontinuidade de costura verificada | `docs/Khnumn.md` §13.5, §15.5 |
-| `F4.E8` | DTM e filtragem de solo | `F4.E4` | planeado | Classificação de solo executada como etapa autónoma, com as zonas medidas, interpoladas e desconhecidas distinguidas | `docs/Khnumn.md` §13.3 |
-| `F4.E9` | Refinamento iterativo da via densa em CPU | `F4.E1`, `F4.E3` | planeado | Ciclo com priori da iteração anterior, paragem por autoconvergência, orçamento declarado e retenção da melhor iteração | `docs/Khnumn.md` §13.1, `processos/decisoes-motores.md` ADR-009 |
-| `F4.E10` | Validação contra a referência de acelerador | `F4.E9`, `F4.E3` | planeado | Densidade, completude, distância ponto-superfície e taxa de outliers comparadas por sub-região com a referência, dentro dos limiares declarados | `processos/protocolo-benchmark.md` §6.1 |
+| `F4.E1` | Adaptador do motor de MVS externo | `F2.E1`, `F0.E7` | implementado | Processo externo invocado pela interface de adaptador, com aviso de licença no primeiro uso e formatos trocados documentados | `docs/Khnumn.md` §18.3, `processos/decisoes-motores.md` ADR-002 |
+| `F4.E2` | Via de superfície esparsa e permissiva | `F2.E5` | implementado | Triangulação sobre a nuvem esparsa executada, sem dependências com copyleft, e origem declarada no produto | `docs/Khnumn.md` §13.1, `processos/decisoes-motores.md` ADR-005 |
+| `F4.E3` | Via de superfície densa em acelerador | `F2.E1` | implementado | Mapas de profundidade e fusão executados no motor de referência, com a consistência geométrica multivista activa | `docs/Khnumn.md` §13.1 |
+| `F4.E4` | Fusão de nuvens e filtragem | `F4.E3` | implementado | Nuvem densa filtrada por consistência entre vistas, ângulo de observação, textura, oclusão e incerteza | `docs/Khnumn.md` §13.1 |
+| `F4.E5` | Processamento por blocos e controlo de RAM | `F4.E3` | implementado | Processamento por blocos com margem de contexto e fusão de fronteiras determinística, dentro do orçamento de memória declarado | `docs/Khnumn.md` §16.1, §16.3 |
+| `F4.E6` | Malha e texturização | `F4.E4` | implementado | Malha e textura geradas com unidades, orientação, escala e origem preservadas; a simplificação declara o **desvio geométrico medido** que introduz, em metros, contra a malha de resolução integral, e não apenas que não alterou medidas | `docs/Khnumn.md` §13.4, §13.6, §15.1 |
+| `F4.E7` | Ortoimagem e ortorretificação | `F4.E2`, `F3.E11` | implementado | Ortoimagem produzida com o modelo de superfície, o CRS de destino e o método de reamostragem registados; descontinuidade de costura verificada | `docs/Khnumn.md` §13.5, §15.5 |
+| `F4.E8` | DTM e filtragem de solo | `F4.E4` | implementado | Classificação de solo executada como etapa autónoma, com as zonas medidas, interpoladas e desconhecidas distinguidas | `docs/Khnumn.md` §13.3 |
+| `F4.E9` | Refinamento iterativo da via densa em CPU | `F4.E1`, `F4.E3` | implementado | Ciclo com priori da iteração anterior, paragem por autoconvergência, orçamento declarado e retenção da melhor iteração | `docs/Khnumn.md` §13.1, `processos/decisoes-motores.md` ADR-009 |
+| `F4.E10` | Validação contra a referência de acelerador | `F4.E9`, `F4.E3` | implementado | Densidade, completude, distância ponto-superfície e taxa de outliers comparadas por sub-região com a referência, dentro dos limiares declarados | `processos/protocolo-benchmark.md` §6.1 |
 | `F4.E11` | Mapa de cobertura e contagem de furos | `F4.E2`, `F9.E3` | planeado | Raster em COG com CRS, `nodata` e legenda; `cobertura_percent`, `furos_contagem` e `furos_area_m2` declarados; a área sem observação nunca é apresentada como valor | `docs/Khnumn.md` §13.6, §15.1, §22 Fase 4 |
 | `F4.E12` | Mapa de incerteza com legenda | `F3.E12`, `F4.E11` | planeado | Raster de incerteza com legenda numérica e unidades; a decomposição entre parcela de controlo e parcela de cena é distinguível no produto | `docs/Khnumn.md` §15.3, §13.6 |
 ### Fase 5 — Planeador e deteção de cenário
 
 | ID | Etapa | Depende de | Estado | Critério de aceitação | Referência |
 |---|---|---|---|---|---|
-| `F5.E1` | Classificador de cenário | `F1.E7` | planeado | Classes candidatas e confiança estimada a partir de sinais observáveis, com as razões registadas | `docs/Khnumn.md` §9.1, §9.2 |
-| `F5.E2` | Confiança e razões explicáveis | `F5.E1` | planeado | Confiança acompanhada das razões que a supportam, e nenhum indício usado sem calibração conhecida | `docs/Khnumn.md` §9.2, §11.6 |
-| `F5.E3` | Correcção manual e registo | `F5.E2` | planeado | Correcção do utilizador com prioridade sobre a sugestão, e a decisão final registada com o seu motivo | `docs/Khnumn.md` §9.2, §2.1 |
-| `F5.E4` | Planeador de pipeline com fallback | `F5.E3`, `F2.E1` | planeado | Pipeline escolhido entre candidatos compatíveis, com fallback declarado e a razão de cada alternativa rejeitada | `docs/Khnumn.md` §6.1, §24.2 |
-| `F5.E5` | Escolha do caminho de superfície e orçamento | `F5.E4`, `F3.E8`, `F4.E2`, `F4.E3` | planeado | Caminho de superfície escolhido segundo a capacidade do host e o requisito de densidade; orçamento do ensemble e das iterações fixado antes da execução | `docs/Khnumn.md` §13.1, §9.3, §16.3 |
-| `F5.E6` | Função multiobjetivo e registo de decisões | `F5.E5` | planeado | Custos estimados, plano materializado em grafo versionado, e todas as decisões registadas com a sua razão | `docs/Khnumn.md` §9.3, §6.2, §24.2 |
+| `F5.E1` | Classificador de cenário | `F1.E7` | implementado | Classes candidatas e confiança estimada a partir de sinais observáveis, com as razões registadas | `docs/Khnumn.md` §9.1, §9.2 |
+| `F5.E2` | Confiança e razões explicáveis | `F5.E1` | implementado | Confiança acompanhada das razões que a supportam, e nenhum indício usado sem calibração conhecida | `docs/Khnumn.md` §9.2, §11.6 |
+| `F5.E3` | Correcção manual e registo | `F5.E2` | implementado | Correcção do utilizador com prioridade sobre a sugestão, e a decisão final registada com o seu motivo | `docs/Khnumn.md` §9.2, §2.1 |
+| `F5.E4` | Planeador de pipeline com fallback | `F5.E3`, `F2.E1` | implementado | Pipeline escolhido entre candidatos compatíveis, com fallback declarado e a razão de cada alternativa rejeitada | `docs/Khnumn.md` §6.1, §24.2 |
+| `F5.E5` | Escolha do caminho de superfície e orçamento | `F5.E4`, `F3.E8`, `F4.E2`, `F4.E3` | implementado | Caminho de superfície escolhido segundo a capacidade do host e o requisito de densidade; orçamento do ensemble e das iterações fixado antes da execução | `docs/Khnumn.md` §13.1, §9.3, §16.3 |
+| `F5.E6` | Função multiobjetivo e registo de decisões | `F5.E5` | implementado | Custos estimados, plano materializado em grafo versionado, e todas as decisões registadas com a sua razão | `docs/Khnumn.md` §9.3, §6.2, §24.2 |
 ### Fase 6 — Vídeo e sensores auxiliares
 
 | ID | Etapa | Depende de | Estado | Critério de aceitação | Referência |
@@ -262,7 +262,7 @@ A fase mais densa do roadmap, e a que decide se o sistema pode fazer afirmaçõe
 | `F6.E5` | Adaptador LiDAR e calibração entre sensores | `F1.E1`, `F2.E1` | planeado | Nuvens de pontos ingeridas com sistema de coordenadas, calibração entre sensores, densidade, padrão de varrimento e incerteza registados | `docs/Khnumn.md` §5.5 |
 | `F6.E6` | Cor e calibração radiométrica | `F1.E6` | planeado | Perfis ICC aplicados; vinheta e sombreamento corrigidos quando calibráveis; calibração a reflectância disponível em multibanda | `docs/Khnumn.md` §5.1 |
 | `F6.E7` | Adaptador de satélite | `F1.E6`, `F2.E1` | planeado | Modelo geométrico identificado; viés de RPC estimado e corrigido; co-registação, máscara de nuvem e reflectância de superfície tratados | `docs/Khnumn.md` §5.3 |
-| `F6.E8` | GNSS/IMU e sincronização | `F6.E1`, `F3.E9` | planeado | Integração de poses GNSS/IMU com a covariância e a sincronização temporal, e os resíduos de alinhamento medidos | `docs/Khnumn.md` §14.1, §21.2 |
+| `F6.E8` | GNSS/IMU e sincronização | `F6.E1`, `F3.E9` | implementado | Integração de poses GNSS/IMU com a covariância e a sincronização temporal, e os resíduos de alinhamento medidos | `docs/Khnumn.md` §14.1, §21.2 |
 ### Fase 7 — Distribuição
 
 | ID | Etapa | Depende de | Estado | Critério de aceitação | Referência |
@@ -277,8 +277,8 @@ A fase mais densa do roadmap, e a que decide se o sistema pode fazer afirmaçõe
 
 | ID | Etapa | Depende de | Estado | Critério de aceitação | Referência |
 |---|---|---|---|---|---|
-| `F8.E1` | Representação de evidência por célula | `F3.E12` | planeado | Estimativa geométrica, covariância, contagem e diversidade de observações, proveniência, época e indicadores de consistência por elemento espacial | `docs/Khnumn.md` §14.4 |
-| `F8.E2` | Alinhamento de fontes | `F8.E1`, `F3.E7` | planeado | Fontes alinhadas com modelos geométricos adequados e restrições explícitas, sem transformações não rígidas aplicadas por aparência | `docs/Khnumn.md` §14.1, §13.2 |
+| `F8.E1` | Representação de evidência por célula | `F3.E12` | implementado | Estimativa geométrica, covariância, contagem e diversidade de observações, proveniência, época e indicadores de consistência por elemento espacial | `docs/Khnumn.md` §14.4 |
+| `F8.E2` | Alinhamento de fontes | `F8.E1`, `F3.E7` | implementado | Fontes alinhadas com modelos geométricos adequados e restrições explícitas, sem transformações não rígidas aplicadas por aparência | `docs/Khnumn.md` §14.1, §13.2 |
 | `F8.E3` | Compatibilidade temporal | `F8.E1` | planeado | Janela de compatibilidade calculada ou recebida, e mudanças prováveis marcadas sem fusão silenciosa | `docs/Khnumn.md` §14.2 |
 | `F8.E4` | Regra de decisão sobre evidência | `F8.E2`, `F8.E3` | planeado | Regras explícitas de aceitação, rejeição e múltiplas hipóteses, testadas contra conjuntos de referência | `docs/Khnumn.md` §14.4 |
 | `F8.E5` | Benchmarks contra baselines | `F8.E4` | planeado | Comparação com baselines estabelecidos em conjuntos públicos e próprios, com o critério de inovação própria aplicado | `docs/Khnumn.md` §21.3, §27.2 |
@@ -363,6 +363,34 @@ Cada linha regista uma mudança de estado, com a data e a causa. A primeira colu
 | `F2.E4` | `implementado` | 2026-10-21 | Diagnóstico do modelo com câmaras, pontos, reprojecção, observações rejeitadas, componentes desconexas e indicadores de degenerescência, com a distinção explícita entre a liberdade de gauge e a observabilidade da cena |
 | `F2.E5` | `implementado` | 2026-10-21 | Exportação das poses, da nuvem esparsa e do modelo, com o CRS, as unidades e a proveniência preservados |
 | `F2.E6` | `implementado` | 2026-10-21 | Comparação com a linha de base manual: coincidência exacta em todas as métricas, com as limitações declaradas e o estado `NOT_VALIDATED`. Registo em `processos/comparacao-sfm.md` |
+| `F3.E1` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E2` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E3` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E4` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E5` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E6` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E7` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E8` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E9` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E10` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E11` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F3.E12` | `implementado` | 2026-10-22 | Implementação da Fase 3: código em `python/khnumn/` e testes em `testes/test_fase3.py` |
+| `F4.E1` | `implementado` | 2026-10-22 | Implementação da Fase 4: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F4.E2` | `implementado` | 2026-10-22 | Implementação da Fase 4: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F4.E3` | `implementado` | 2026-10-22 | Implementação da Fase 4: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F4.E4` | `implementado` | 2026-10-22 | Implementação da Fase 4: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F4.E5` | `implementado` | 2026-10-22 | Implementação da Fase 4: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F4.E6` | `implementado` | 2026-10-22 | Implementação da Fase 4: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F4.E7` | `implementado` | 2026-10-22 | Implementação da Fase 4: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F4.E8` | `implementado` | 2026-10-22 | Implementação da Fase 4: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F4.E9` | `implementado` | 2026-10-22 | Implementação da Fase 4: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F4.E10` | `implementado` | 2026-10-22 | Implementação da Fase 4: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F5.E1` | `implementado` | 2026-10-22 | Implementação da Fase 5: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F5.E2` | `implementado` | 2026-10-22 | Implementação da Fase 5: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F5.E3` | `implementado` | 2026-10-22 | Implementação da Fase 5: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F5.E4` | `implementado` | 2026-10-22 | Implementação da Fase 5: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F5.E5` | `implementado` | 2026-10-22 | Implementação da Fase 5: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
+| `F5.E6` | `implementado` | 2026-10-22 | Implementação da Fase 5: código em `python/khnumn/` e testes em `testes/test_fase4_5.py` |
 
 O registo é acumulativo e acompanha o projeto. Uma regressão de estado é registada como uma nova linha, com a causa, e não apaga a linha anterior.
 

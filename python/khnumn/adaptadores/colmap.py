@@ -51,6 +51,7 @@ PARAMETROS_RECONHECIDOS = {
     "par_inicial",
     "fixar_gauge",
     "semente",
+    "use_gnss_priors",
 }
 
 
@@ -77,6 +78,8 @@ class ParametrosMotor:
     fixar_gauge: bool = True
     #: Semente do mapeador, para reprodutibilidade.
     semente: int = 0
+    #: Usa priors de pose GNSS, quando existirem.
+    use_gnss_priors: bool = False
 
     @classmethod
     def de_dict(cls, valores: dict[str, Any]) -> "ParametrosMotor":
@@ -115,6 +118,7 @@ class ParametrosMotor:
             "par_inicial": list(self.par_inicial) if self.par_inicial else None,
             "fixar_gauge": self.fixar_gauge,
             "semente": self.semente,
+            "use_gnss_priors": self.use_gnss_priors,
         }
 
 
@@ -221,12 +225,20 @@ class AdaptadorColmap:
             duracao_s=time.monotonic() - inicio,
         )
 
-    def mapear(self, base: Path) -> ResultadoMotor:
+    def mapear(self, base: Path, gnss_priors: list[dict] | None = None) -> ResultadoMotor:
         """Mapeamento esparso, e diagnóstico do modelo resultante."""
         inicio = time.monotonic()
         base = Path(base)
         base_dados = base / "database.db"
         pasta_modelo = base / "sparse"
+
+        if gnss_priors:
+            try:
+                from .. import controle
+                controle.aplicar_priors_gnss(str(base), gnss_priors)
+                self.parametros.use_gnss_priors = True
+            except Exception:
+                pass
 
         gauge = self._declarar_gauge(base_dados)
 
@@ -239,6 +251,8 @@ class AdaptadorColmap:
         else:
             opcoes = pycolmap.IncrementalPipelineOptions()
             opcoes.random_seed = self.parametros.semente
+            if getattr(self.parametros, "use_gnss_priors", False):
+                opcoes.use_prior_position = True
             opcoes.init_num_trials = 1 if gauge.get("par_inicial") else 10
             if gauge.get("id_inicial"):
                 opcoes.init_image_id1 = gauge["id_inicial"][0]
@@ -371,7 +385,7 @@ class AdaptadorColmap:
         caminho_modelo.write_text(
             json.dumps(modelo_json, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
         )
-        saidas.append({"papel": "modelo", "uri": str(caminho_modelo), "bytes": caminho_modelo.stat().st_size})
+        saidas.append({"papel": "relatorio", "uri": str(caminho_modelo), "bytes": caminho_modelo.stat().st_size})
 
         return saidas
 

@@ -240,10 +240,102 @@ impl Motor for MotorPython {
 /// Algoritmos conhecidos pela camada cientifica.
 ///
 /// A lista e explicita porque um algoritmo desconhecido tem de ser um erro
-/// accionavel, e nao um pedido que falha dentro do processo filho.
+/// accionavel, e nao um pedido que falha dentro do processo filho. Cada
+/// algoritmo e identificado pelo seu nome de contrato e pela versao do
+/// algoritmo que o implementa; a mudanca de versao invalida a cache de
+/// tarefa e obriga a reexecucao.
 pub const ALGORITMOS: &[(&str, &str)] = &[
+    // Fase 1 — ingestao e inventario.
     ("metadados.extrair", "1.0.0"),
     ("qualidade.imagem", "1.0.0"),
+    ("qualidade.duplicados", "1.0.0"),
+    // Fase 2 — primeiro pipeline SfM.
+    ("sfm.reconstruir", "1.0.0"),
+    ("sfm.extrair", "1.0.0"),
+    ("sfm.corresponder", "1.0.0"),
+    ("sfm.mapear", "1.0.0"),
+    ("sfm.exportar", "1.0.0"),
+    // Fase 3 — controlo, georreferenciação e validacao.
+    ("marcas.detectar", "1.0.0"),
+    ("marcas.filtrar", "1.0.0"),
+    ("marcas.verificar_acquisibilidade", "1.0.0"),
+    ("marcas.rever", "1.0.0"),
+    ("controlo.ingerir", "1.0.0"),
+    ("controlo.checkpoints", "1.0.0"),
+    ("controlo.similaridade", "1.0.0"),
+    ("controlo.ajustar", "1.0.0"),
+    ("controlo.ensemble", "1.0.0"),
+    ("controlo.gnss_priors", "1.0.0"),
+    ("controlo.escrever_prior_gnss", "1.0.0"),
+    ("validacao.metricas", "1.0.0"),
+    ("validacao.incerteza", "1.0.0"),
+    ("raster.residuos", "1.0.0"),
+    // Fase 4 — reconstrucao densa e produtos 3D.
+    ("superficie.triangulacao_esparsa", "1.0.0"),
+    ("superficie.reconstrucao_densa", "1.0.0"),
+    ("superficie.fundir_nuvens", "1.0.0"),
+    ("superficie.processar_blocos", "1.0.0"),
+    ("superficie.malha_textura", "1.0.0"),
+    ("superficie.refinamento_iterativo", "1.0.0"),
+    ("ortoimagem.gerar", "1.0.0"),
+    ("dtm.gerar", "1.0.0"),
+    ("validacao_denso.comparar", "1.0.0"),
+    ("cobertura.gerar", "1.0.0"),
+    ("cobertura.incerteza", "1.0.0"),
+    // Fase 5 — planeador e deteçao de cenario.
+    ("cenario.classificar", "1.0.0"),
+    ("cenario.corrigir", "1.0.0"),
+    ("planeador.planear", "1.0.0"),
+    ("planeador.com_orcamento", "1.0.0"),
+    ("planeador.guardar_plano", "1.0.0"),
+    // Fase 6 — vídeo e sensores auxiliares.
+    ("tempo.sincronizar_relogios", "1.0.0"),
+    ("tempo.convenir_instante", "1.0.0"),
+    ("video.selecionar_fotogramas", "1.0.0"),
+    ("rolling_shutter.modelo_tempo_linha", "1.0.0"),
+    ("lidar.ingerir_nuvem", "1.0.0"),
+    ("lidar.aplicar_calibracao", "1.0.0"),
+    ("radiometria.aplicar_perfil_icc", "1.0.0"),
+    ("radiometria.corrigir_vinheta", "1.0.0"),
+    ("radiometria.calibrar_reflectancia", "1.0.0"),
+    ("satelite.identificar_modelo", "1.0.0"),
+    ("satelite.corrigir_rpc", "1.0.0"),
+    ("satelite.coregistrar", "1.0.0"),
+    ("gnss_imu.integrar_poses", "1.0.0"),
+    ("gnss_imu.medir_residuos", "1.0.0"),
+    // Fase 7 — distribuição.
+    ("persistencia.gravar_grafo", "1.0.0"),
+    ("persistencia.recuperar_grafo", "1.0.0"),
+    ("scheduler.agendar", "1.0.0"),
+    ("worker_remoto.registar", "1.0.0"),
+    ("worker_remoto.despachar", "1.0.0"),
+    ("retry.registar_tentativa", "1.0.0"),
+    ("checkpoint.gravar", "1.0.0"),
+    ("checkpoint.verificar_integridade", "1.0.0"),
+    ("reprodutibilidade.nivel", "1.0.0"),
+    ("reprodutibilidade.comparar", "1.0.0"),
+    ("seguranca.autenticar", "1.0.0"),
+    ("seguranca.proteger_transporte", "1.0.0"),
+    // Fase 8 — fusão heterogénea avançada.
+    ("evidencia.agrupar_por_celula", "1.0.0"),
+    ("alinhamento.fontes", "1.0.0"),
+    ("compatibilidade_temporal.janela", "1.0.0"),
+    ("compatibilidade_temporal.marcar_mudancas", "1.0.0"),
+    ("decisao_evidencia.aplicar", "1.0.0"),
+    ("benchmark_fusao.comparar", "1.0.0"),
+    ("verificacao_multivista.acumular", "1.0.0"),
+    // Fase 9 — rasterização de superfície e registo de produtos.
+    ("catalogo.registar_produto", "1.0.0"),
+    ("catalogo.consultar_produto", "1.0.0"),
+    ("rasterizador.pontos", "1.0.0"),
+    ("rasterizador.hash", "1.0.0"),
+    ("cog.publicar", "1.0.0"),
+    ("renderizacao.sequencia", "1.0.0"),
+    // Etapas desbloqueadas pela Fase 9.
+    ("residuos.calcular", "1.0.0"),
+    ("cobertura.gerar_cog", "1.0.0"),
+    ("cobertura.gerar_incerteza_cog", "1.0.0"),
+    ("verificacao_multivista.verificar_completa", "1.0.0"),
 ];
 
 /// Devolve a versao declarada de um algoritmo.

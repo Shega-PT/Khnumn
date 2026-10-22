@@ -189,7 +189,6 @@ O sistema foi desenhado para funcionar num computador modesto, com CPU e RAM com
 ├── crates/                    o núcleo, em Rust
 │   ├── khnumn-core/           modelo, esquemas, catálogo, DAG, proveniência
 │   ├── khnumn-cli/            o executável `khnumn`
-│   └── khnumn-render/         rasterização de superfície (Fase 9, ADR-012)
 ├── python/khnumn/             a camada científica, em Python
 ├── schemas/                   os contratos JSON Schema versionados
 ├── manifests/                 a declaração dos conjuntos de dados e os seus hashes

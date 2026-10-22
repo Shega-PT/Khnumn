@@ -17,6 +17,7 @@ pub mod loja;
 pub mod modelo;
 pub mod processo;
 pub mod python;
+pub mod rasterizador;
 pub mod schema;
 pub mod tarefa;
 

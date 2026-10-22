@@ -161,6 +161,8 @@ pub struct ProcessingConfig {
     pub build_mesh: bool,
     /// Constroi a ortoimagem.
     pub build_orthoimage: bool,
+    /// Constroi os mapas de diagnóstico, por rasterização de superfície.
+    pub build_diagnostic_maps: bool,
 }
 
 /// Configuracao do bloco `reproducibility`.
